@@ -14,15 +14,15 @@ HQ_SMAPE_THRESHOLD="${HQ_SMAPE_THRESHOLD:-0.9}"
 HQ_SELECTION_MODE="${HQ_SELECTION_MODE:-majority}"
 HQ_REPEAT_FILL="${HQ_REPEAT_FILL:-0}"
 RUN_TAG="${RUN_TAG:-hq_majority_scan_${TASK}_$(date +%Y%m%d_%H%M%S)}"
-OUT_DIR="${OUT_DIR:-/path/to/datasets/experiments/${RUN_TAG}}"
+OUT_DIR="${OUT_DIR:-${DATASET_ROOT:-/path/to/datasets}/experiments/${RUN_TAG}}"
 mkdir -p "$OUT_DIR"
 
 export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0}"
 export NO_GPU="${NO_GPU:-1}"
-export DATA_LOCAL_DIR="${DATA_LOCAL_DIR:-/path/to/datasets/verl_data}"
-export HF_HOME="${HF_HOME:-/path/to/datasets/hf_home}"
-export BACKBONE_PATH="${BACKBONE_PATH:-/path/to/datasets/models/OpenGVLab/InternVL3-2B}"
-export PYTHON_BIN="${PYTHON_BIN:-/path/to/project/envs/ttrv/bin/python}"
+export DATA_LOCAL_DIR="${DATA_LOCAL_DIR:-${DATASET_ROOT:-/path/to/datasets}/verl_data}"
+export HF_HOME="${HF_HOME:-${DATASET_ROOT:-/path/to/datasets}/hf_home}"
+export BACKBONE_PATH="${BACKBONE_PATH:-${DATASET_ROOT:-/path/to/datasets}/models/OpenGVLab/InternVL3-2B}"
+export PYTHON_BIN="${PYTHON_BIN:-${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python}"
 export VLLM_USE_V1="${VLLM_USE_V1:-0}"
 export HF_HUB_OFFLINE="${HF_HUB_OFFLINE:-1}"
 export TRANSFORMERS_OFFLINE="${TRANSFORMERS_OFFLINE:-1}"
@@ -63,7 +63,7 @@ bash verl/examples/ttrv/run.sh \
   actor_rollout_ref.rollout.val_kwargs.top_p=0.95 \
   actor_rollout_ref.rollout.gpu_memory_utilization=0.55 \
   trainer.experiment_name="${TASK}_${RUN_TAG}" \
-  trainer.default_local_dir="/path/to/datasets/checkpoints/hq_scan/${RUN_TAG}/${TASK}"
+  trainer.default_local_dir="${DATASET_ROOT:-/path/to/datasets}/checkpoints/hq_scan/${RUN_TAG}/${TASK}"
 
 "$PYTHON_BIN" verl/scripts/prepare_hq_major_correct_split.py make-final \
   --pool-dir "$DATA_LOCAL_DIR/$TASK" \

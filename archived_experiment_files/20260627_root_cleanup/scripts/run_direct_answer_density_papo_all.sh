@@ -6,10 +6,10 @@ cd "$ROOT_DIR"
 
 RESOURCE_QUEUE_ID="${RESOURCE_QUEUE_ID:-q-20250901110548-6w2bl}"
 FLAVOR_ID="${FLAVOR_ID:-ml.pni2l.7xlarge}"
-DATA_ROOT="${DATA_ROOT:-/path/to/datasets}"
-RUNTIME_ROOT="${RUNTIME_ROOT:-/path/to/project/ttrv_runtime}"
+DATA_ROOT="${DATA_ROOT:-${DATASET_ROOT:-/path/to/datasets}}"
+RUNTIME_ROOT="${RUNTIME_ROOT:-${PROJECT_ROOT:-/path/to/project}/ttrv_runtime}"
 BACKBONE_PATH="${BACKBONE_PATH:-$RUNTIME_ROOT/models/OpenGVLab/InternVL3-2B}"
-PYTHON_BIN="${PYTHON_BIN:-/path/to/project/envs/ttrv/bin/python}"
+PYTHON_BIN="${PYTHON_BIN:-${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python}"
 RUN_TAG="${RUN_TAG:-direct_answer_density_papo_$(date +%Y%m%d_%H%M%S)}"
 DATASETS=(${DATASETS:-visualsimpleqa ocrbench_v1 aokvqa_da_val})
 

@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+
+import os as _anon_os
+_ANON_DATASET_ROOT = _anon_os.environ.get('DATASET_ROOT', '/path/to/datasets')
+
 import argparse
 import io
 import json
@@ -322,9 +326,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Download Table 2 VQA images needed by local TTRV *_20 templates.")
     parser.add_argument("--datasets", nargs="+", default=list(DATASETS), choices=DATASETS)
     parser.add_argument("--template-root", default="verl/data")
-    parser.add_argument("--data-root", default="/path/to/datasets")
-    parser.add_argument("--cache-dir", default=os.environ.get("HF_HOME", "/path/to/datasets/hf_home"))
-    parser.add_argument("--summary-path", default="/path/to/datasets/verl_data/table2_vqa20_download_summary.json")
+    parser.add_argument("--data-root", default=f'{_ANON_DATASET_ROOT}')
+    parser.add_argument("--cache-dir", default=os.environ.get("HF_HOME", f'{_ANON_DATASET_ROOT}/hf_home'))
+    parser.add_argument("--summary-path", default=f'{_ANON_DATASET_ROOT}/verl_data/table2_vqa20_download_summary.json')
     parser.add_argument("--overwrite", action="store_true")
     parser.add_argument("--limit-hf-rows", type=int, default=-1, help="Debug limit for prompt-matched HF datasets.")
     args = parser.parse_args()

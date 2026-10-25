@@ -2,10 +2,10 @@
 set -Eeuo pipefail
 
 RUN_TAG="${RUN_TAG:-$(date +%Y%m%d_%H%M%S)}"
-REPO_ROOT="/path/to/project/TTRV"
+REPO_ROOT="${PROJECT_ROOT:-/path/to/project}/TTRV"
 VERL_DIR="$REPO_ROOT/verl"
-DATA_ROOT="/path/to/datasets/verl_data"
-EXP_ROOT="/path/to/datasets/experiments/blank_image_drop_closed_choice_${RUN_TAG}"
+DATA_ROOT="${DATASET_ROOT:-/path/to/datasets}/verl_data"
+EXP_ROOT="${DATASET_ROOT:-/path/to/datasets}/experiments/blank_image_drop_closed_choice_${RUN_TAG}"
 QUEUE_ID="${QUEUE_ID:-q-20250901110548-6w2bl}"
 FLAVOR_ID="${FLAVOR_ID:-ml.pni2l.7xlarge}"
 VOLC_BIN="${VOLC_BIN:-/root/.volc/bin/volc}"
@@ -30,10 +30,10 @@ BLANK_TASKS=(
 )
 
 if [[ "${PREPARE_BLANK_DATA:-1}" == "1" ]]; then
-  PREPARE_PYTHON="${PREPARE_PYTHON:-/path/to/project/envs/ttrv/bin/python}"
+  PREPARE_PYTHON="${PREPARE_PYTHON:-${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python}"
   "$PREPARE_PYTHON" "$VERL_DIR/scripts/prepare_blank_white_datasets.py" \
     --data-root "$DATA_ROOT" \
-    --image-root "/path/to/datasets/blank_white_images" \
+    --image-root "${DATASET_ROOT:-/path/to/datasets}/blank_white_images" \
     --summary-json "$EXP_ROOT/blank_white_prepare_summary.json" \
     --tasks "${BLANK_TASKS[@]}" | tee -a "$MANAGER_LOG"
 fi
@@ -56,9 +56,9 @@ write_worker() {
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-REPO_ROOT="/path/to/project/TTRV"
+REPO_ROOT="${PROJECT_ROOT:-/path/to/project}/TTRV"
 VERL_DIR="$REPO_ROOT/verl"
-RUNTIME_ROOT="/path/to/project/ttrv_runtime"
+RUNTIME_ROOT="${PROJECT_ROOT:-/path/to/project}/ttrv_runtime"
 EXP_ROOT="__EXP_ROOT__"
 RUN_NAME="__KEY__"
 RUN_FAMILY="__FAMILY__"
@@ -77,11 +77,11 @@ trap 'status=$?; echo "[$RUN_NAME] FAILED status=$status end=$(date)"; touch "$R
 exec > >(tee -a "$RUN_DIR/run.log") 2>&1
 cd "$VERL_DIR"
 
-export PATH="/path/to/project/envs/ttrv/bin:$PATH"
-export PYTHON_BIN="/path/to/project/envs/ttrv/bin/python"
+export PATH="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin:$PATH"
+export PYTHON_BIN="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python"
 export CUDA_VISIBLE_DEVICES=0,1
 export NO_GPU=2
-export DATA_LOCAL_DIR=/path/to/datasets/verl_data
+export DATA_LOCAL_DIR=${DATASET_ROOT:-/path/to/datasets}/verl_data
 export BACKBONE_PATH="$RUNTIME_ROOT/models/OpenGVLab/InternVL3-2B"
 export HF_HOME="$RUNTIME_ROOT/hf_home"
 export HF_MODULES_CACHE="$RUNTIME_ROOT/hf_home/modules"
@@ -254,14 +254,14 @@ run_one() {
   fi
 }
 
-run_one "our_mme20_white" "our_visual_dep_best" "mme_20" "legacy" "AB" "frequency_valid_entropy" "/path/to/datasets/experiments/visual_dep_reward_best_ckpt_20260706_141927/mme_coef002_ori000/checkpoints/global_step_20" "visual_dep_best_step20_acc_ckpt"
-run_one "our_ai2d20_white" "our_visual_dep_best" "ai2d_20" "legacy" "A-D" "frequency_valid_entropy" "/path/to/datasets/experiments/visual_dep_reward_best_ckpt_20260706_141927/ai2d_coef003_ori000/checkpoints/global_step_20" "visual_dep_best_step20_acc_ckpt"
-run_one "our_rwq20_hq_white" "our_visual_dep_best" "realworldqa_20_aligned_1000_hq_major_correct20_20260614_114652" "legacy" "A-D" "frequency_valid_entropy" "/path/to/datasets/experiments/visual_dep_reward_best_ckpt_20260706_141927/rwq_coef005_ori000/checkpoints/global_step_20" "visual_dep_best_step20_acc_ckpt"
-run_one "our_seed20_white" "our_visual_dep_best" "seed_20" "legacy" "A-D" "frequency_valid_entropy" "/path/to/datasets/experiments/visual_dep_reward_best_ckpt_20260706_141927/seed_coef003_ori003/checkpoints/global_step_20" "visual_dep_best_step20_acc_ckpt"
-run_one "our_mathvista20_hq_white" "our_visual_dep_best" "mathvista_20_hq_train13_repeat20" "legacy" "A-F" "frequency_valid_entropy" "/path/to/datasets/experiments/mathvista20_hq_train13_repeat20_ori_nll_kl0005_eta003_20260616_145107/checkpoints/global_step_20" "mathvista_best_step20_existing_from_prior_acc_ckpt"
-run_one "our_mathverse20_fixed_white" "our_visual_dep_best" "mathverse_20_choice_norm_promptfix" "mathvista_choice" "A-F" "frequency_valid_entropy" "/path/to/datasets/checkpoints/disabled/mathverse20_promptfix_papo_ori_nll_eta0p04_20260617_092543/global_step_20" "mathverse_best_step20_existing_from_prior_acc_ckpt"
+run_one "our_mme20_white" "our_visual_dep_best" "mme_20" "legacy" "AB" "frequency_valid_entropy" "${DATASET_ROOT:-/path/to/datasets}/experiments/visual_dep_reward_best_ckpt_20260706_141927/mme_coef002_ori000/checkpoints/global_step_20" "visual_dep_best_step20_acc_ckpt"
+run_one "our_ai2d20_white" "our_visual_dep_best" "ai2d_20" "legacy" "A-D" "frequency_valid_entropy" "${DATASET_ROOT:-/path/to/datasets}/experiments/visual_dep_reward_best_ckpt_20260706_141927/ai2d_coef003_ori000/checkpoints/global_step_20" "visual_dep_best_step20_acc_ckpt"
+run_one "our_rwq20_hq_white" "our_visual_dep_best" "realworldqa_20_aligned_1000_hq_major_correct20_20260614_114652" "legacy" "A-D" "frequency_valid_entropy" "${DATASET_ROOT:-/path/to/datasets}/experiments/visual_dep_reward_best_ckpt_20260706_141927/rwq_coef005_ori000/checkpoints/global_step_20" "visual_dep_best_step20_acc_ckpt"
+run_one "our_seed20_white" "our_visual_dep_best" "seed_20" "legacy" "A-D" "frequency_valid_entropy" "${DATASET_ROOT:-/path/to/datasets}/experiments/visual_dep_reward_best_ckpt_20260706_141927/seed_coef003_ori003/checkpoints/global_step_20" "visual_dep_best_step20_acc_ckpt"
+run_one "our_mathvista20_hq_white" "our_visual_dep_best" "mathvista_20_hq_train13_repeat20" "legacy" "A-F" "frequency_valid_entropy" "${DATASET_ROOT:-/path/to/datasets}/experiments/mathvista20_hq_train13_repeat20_ori_nll_kl0005_eta003_20260616_145107/checkpoints/global_step_20" "mathvista_best_step20_existing_from_prior_acc_ckpt"
+run_one "our_mathverse20_fixed_white" "our_visual_dep_best" "mathverse_20_choice_norm_promptfix" "mathvista_choice" "A-F" "frequency_valid_entropy" "${DATASET_ROOT:-/path/to/datasets}/checkpoints/disabled/mathverse20_promptfix_papo_ori_nll_eta0p04_20260617_092543/global_step_20" "mathverse_best_step20_existing_from_prior_acc_ckpt"
 
-TTRV_ROOT="/path/to/datasets/experiments/ttrv_official_all_step10_temp07_pass8_20260709_144415"
+TTRV_ROOT="${DATASET_ROOT:-/path/to/datasets}/experiments/ttrv_official_all_step10_temp07_pass8_20260709_144415"
 run_one "ttrv_mme20_white" "ttrv_official_step10" "mme_20" "legacy" "AB" "frequency_valid_entropy" "$TTRV_ROOT/ttrv_official_mme20_train_s10_temp07_pass8/checkpoints/global_step_10" "ttrv_official_complete_step10_ckpt"
 run_one "ttrv_ai2d20_white" "ttrv_official_step10" "ai2d_20" "legacy" "A-D" "frequency_valid_entropy" "$TTRV_ROOT/ttrv_official_ai2d20_train_s10_temp07_pass8/checkpoints/global_step_10" "ttrv_official_complete_step10_ckpt"
 run_one "ttrv_rwq20_hq_white" "ttrv_official_step10" "realworldqa_20_aligned_1000_hq_major_correct20_20260614_114652" "legacy" "A-D" "frequency_valid_entropy" "$TTRV_ROOT/ttrv_official_rwq20_train_s10_temp07_pass8/checkpoints/global_step_10" "ttrv_official_complete_step10_ckpt"

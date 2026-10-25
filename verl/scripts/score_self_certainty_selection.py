@@ -8,6 +8,11 @@ the model's unscaled (T=1) full-vocabulary logits.
 
 from __future__ import annotations
 
+import os as _anon_os
+_ANON_DATASET_ROOT = _anon_os.environ.get('DATASET_ROOT', '/path/to/datasets')
+_ANON_PROJECT_ROOT = _anon_os.environ.get('PROJECT_ROOT', '/path/to/project')
+
+
 import argparse
 import csv
 import json
@@ -31,11 +36,11 @@ from attention_visualization.attention_viz import _prepare_inputs
 from verl.utils.tokenizer import hf_processor
 
 
-MODEL_PATH = Path("/path/to/project/ttrv_runtime/models/OpenGVLab/InternVL3-2B")
-CLOSED_ROOT = Path("/path/to/datasets/experiments/step0_reward_selection32_20260711_020518")
-STAGE_A_ROOT = Path("/path/to/datasets/experiments/diagnostic_stage_a_20260718_043946")
+MODEL_PATH = Path(f'{_ANON_PROJECT_ROOT}/ttrv_runtime/models/OpenGVLab/InternVL3-2B')
+CLOSED_ROOT = Path(f'{_ANON_DATASET_ROOT}/experiments/step0_reward_selection32_20260711_020518')
+STAGE_A_ROOT = Path(f'{_ANON_DATASET_ROOT}/experiments/diagnostic_stage_a_20260718_043946')
 OPEN_OURS_PATH = Path(
-    "/path/to/datasets/experiments/obs1_fixed_fragmentation_selection_20260723/question_selection.jsonl"
+    f'{_ANON_DATASET_ROOT}/experiments/obs1_fixed_fragmentation_selection_20260723/question_selection.jsonl'
 )
 EXPECTED_SAMPLES = 32
 
@@ -44,38 +49,38 @@ SPECS: dict[str, dict[str, Any]] = {
     "mme20": {
         "group": "closed",
         "source": CLOSED_ROOT / "mme20/selection_groups.jsonl",
-        "parquet": Path("/path/to/datasets/verl_data/mme_20/test.parquet"),
+        "parquet": Path(f'{_ANON_DATASET_ROOT}/verl_data/mme_20/test.parquet'),
         "expected": 1576,
     },
     "ai2d20": {
         "group": "closed",
         "source": CLOSED_ROOT / "ai2d20/selection_groups.jsonl",
-        "parquet": Path("/path/to/datasets/verl_data/ai2d_20/test.parquet"),
+        "parquet": Path(f'{_ANON_DATASET_ROOT}/verl_data/ai2d_20/test.parquet'),
         "expected": 2704,
     },
     "seed20": {
         "group": "closed",
         "source": CLOSED_ROOT / "seed20/selection_groups.jsonl",
-        "parquet": Path("/path/to/datasets/verl_data/seed_20/test.parquet"),
+        "parquet": Path(f'{_ANON_DATASET_ROOT}/verl_data/seed_20/test.parquet'),
         "expected": 3881,
     },
     "mathvista20_hq": {
         "group": "closed",
         "source": CLOSED_ROOT / "mathvista20_hq/selection_groups.jsonl",
-        "parquet": Path("/path/to/datasets/verl_data/mathvista_20_hq_train13_repeat20/test.parquet"),
+        "parquet": Path(f'{_ANON_DATASET_ROOT}/verl_data/mathvista_20_hq_train13_repeat20/test.parquet'),
         "expected": 490,
     },
     "mathverse20_fixed": {
         "group": "closed",
         "source": CLOSED_ROOT / "mathverse20_fixed/selection_groups.jsonl",
-        "parquet": Path("/path/to/datasets/verl_data/mathverse_20_choice_norm_promptfix/test.parquet"),
+        "parquet": Path(f'{_ANON_DATASET_ROOT}/verl_data/mathverse_20_choice_norm_promptfix/test.parquet'),
         "expected": 1699,
     },
     "realworldqa20_hq": {
         "group": "closed",
         "source": CLOSED_ROOT / "realworldqa20_hq/selection_groups.jsonl",
         "parquet": Path(
-            "/path/to/datasets/verl_data/"
+            f'{_ANON_DATASET_ROOT}/verl_data/'
             "realworldqa_20_aligned_1000_hq_major_correct20_20260614_114652/test.parquet"
         ),
         "expected": 765,
@@ -84,7 +89,7 @@ SPECS: dict[str, dict[str, Any]] = {
         "group": "open",
         "source": STAGE_A_ROOT / "dumps/visualsimpleqa/real.jsonl",
         "parquet": Path(
-            "/path/to/datasets/experiments/diagnostic_stage_a_20260717_115200/"
+            f'{_ANON_DATASET_ROOT}/experiments/diagnostic_stage_a_20260717_115200/'
             "prepared/visualsimpleqa/real.parquet"
         ),
         "expected": 250,
@@ -93,7 +98,7 @@ SPECS: dict[str, dict[str, Any]] = {
         "group": "open",
         "source": STAGE_A_ROOT / "dumps/ocrbench_v1/real.jsonl",
         "parquet": Path(
-            "/path/to/datasets/experiments/diagnostic_stage_a_20260717_115200/"
+            f'{_ANON_DATASET_ROOT}/experiments/diagnostic_stage_a_20260717_115200/'
             "prepared/ocrbench_v1/real.parquet"
         ),
         "expected": 250,
@@ -102,7 +107,7 @@ SPECS: dict[str, dict[str, Any]] = {
         "group": "open",
         "source": STAGE_A_ROOT / "dumps/aokvqa_da_val/real.jsonl",
         "parquet": Path(
-            "/path/to/datasets/experiments/diagnostic_stage_a_20260717_115200/"
+            f'{_ANON_DATASET_ROOT}/experiments/diagnostic_stage_a_20260717_115200/'
             "prepared/aokvqa_da_val/real.parquet"
         ),
         "expected": 250,

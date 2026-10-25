@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 QUEUE_ID="${QUEUE_ID:-q-20250901110548-6w2bl}"
 FLAVOR_ID="${FLAVOR_ID:-ml.pni2l.7xlarge}"
-EXP_ROOT="/path/to/datasets/experiments/visual_dep_reward_valid_only_closed_choice_attn_params_20260705_085958"
+EXP_ROOT="${DATASET_ROOT:-/path/to/datasets}/experiments/visual_dep_reward_valid_only_closed_choice_attn_params_20260705_085958"
 TAG="20260705_085958"
 RUNS=(ai2d20 realworldqa20_hq seed20 mathvista20_hq mathverse20_promptfix)
 echo "[manager] exp_root=$EXP_ROOT"

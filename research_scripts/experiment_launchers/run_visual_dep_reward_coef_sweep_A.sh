@@ -2,8 +2,8 @@
 set -Eeuo pipefail
 
 RUN_TAG="${RUN_TAG:-$(date +%Y%m%d_%H%M%S)}"
-REPO_ROOT="/path/to/project/TTRV"
-EXP_ROOT="/path/to/datasets/experiments/visual_dep_reward_coef_sweep_A_${RUN_TAG}"
+REPO_ROOT="${PROJECT_ROOT:-/path/to/project}/TTRV"
+EXP_ROOT="${DATASET_ROOT:-/path/to/datasets}/experiments/visual_dep_reward_coef_sweep_A_${RUN_TAG}"
 QUEUE_ID="${QUEUE_ID:-q-20250901110548-6w2bl}"
 FLAVOR_ID="${FLAVOR_ID:-ml.pni2l.7xlarge}"
 
@@ -41,9 +41,9 @@ write_worker() {
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-REPO_ROOT="/path/to/project/TTRV"
+REPO_ROOT="${PROJECT_ROOT:-/path/to/project}/TTRV"
 VERL_DIR="$REPO_ROOT/verl"
-RUNTIME_ROOT="/path/to/project/ttrv_runtime"
+RUNTIME_ROOT="${PROJECT_ROOT:-/path/to/project}/ttrv_runtime"
 EXP_ROOT="__EXP_ROOT__"
 RUN_NAME="__KEY__"
 TASK_NAME="__TASK__"
@@ -72,11 +72,11 @@ trap 'status=$?; echo "[$RUN_NAME] FAILED status=$status end=$(date)"; touch "$R
 exec > >(tee -a "$RUN_DIR/run.log") 2>&1
 cd "$VERL_DIR"
 
-export PATH="/path/to/project/envs/ttrv/bin:$PATH"
-export PYTHON_BIN="/path/to/project/envs/ttrv/bin/python"
+export PATH="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin:$PATH"
+export PYTHON_BIN="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python"
 export CUDA_VISIBLE_DEVICES=0,1
 export NO_GPU=2
-export DATA_LOCAL_DIR=/path/to/datasets/verl_data
+export DATA_LOCAL_DIR=${DATASET_ROOT:-/path/to/datasets}/verl_data
 export BACKBONE_PATH="$RUNTIME_ROOT/models/OpenGVLab/InternVL3-2B"
 export HF_HOME="$RUNTIME_ROOT/hf_home"
 export HF_MODULES_CACHE="$RUNTIME_ROOT/hf_home/modules"

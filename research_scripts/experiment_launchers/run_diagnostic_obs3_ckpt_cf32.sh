@@ -6,19 +6,19 @@ set -Eeuo pipefail
 
 RUN_TAG="${RUN_TAG:-$(date +%Y%m%d_%H%M%S)}"
 MODE="${MODE:-full}"
-REPO_ROOT="/path/to/project/TTRV"
+REPO_ROOT="${PROJECT_ROOT:-/path/to/project}/TTRV"
 VERL_DIR="$REPO_ROOT/verl"
-DATA_ROOT="/path/to/datasets"
-RUNTIME_ROOT="/path/to/project/ttrv_runtime"
-PYTHON_BIN="/path/to/project/envs/ttrv/bin/python"
-RAY_BIN="/path/to/project/envs/ttrv/bin/ray"
+DATA_ROOT="${DATASET_ROOT:-/path/to/datasets}"
+RUNTIME_ROOT="${PROJECT_ROOT:-/path/to/project}/ttrv_runtime"
+PYTHON_BIN="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python"
+RAY_BIN="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/ray"
 SOURCE_ROOT="${SOURCE_ROOT:-$DATA_ROOT/experiments/diagnostic_stage_a_strict_cf32_20260719_120829}"
 EXP_ROOT="${EXP_ROOT:-$DATA_ROOT/experiments/diagnostic_obs3_ckpt_cf32_${RUN_TAG}}"
 TTRV_CKPT_ROOT="${TTRV_CKPT_ROOT:-}"
 BENCHMARKS="${BENCHMARKS:-}"
 MODELS="${MODELS:-}"
-KEEPALIVE_PY="${KEEPALIVE_PY:-/path/to/storage/camflow/bin/python}"
-KEEPALIVE_SCRIPT="${KEEPALIVE_SCRIPT:-/path/to/storage/CamFlow-Pami/CamFlow-Code-main/tools/dummy_keepalive_worker.py}"
+KEEPALIVE_PY="${KEEPALIVE_PY:-${STORAGE_ROOT:-/path/to/storage}/camflow/bin/python}"
+KEEPALIVE_SCRIPT="${KEEPALIVE_SCRIPT:-${STORAGE_ROOT:-/path/to/storage}/CamFlow-Pami/CamFlow-Code-main/tools/dummy_keepalive_worker.py}"
 STOP_ON_FAILURE="${STOP_ON_FAILURE:-1}"
 WORKER_DIR="${WORKER_DIR:-/tmp/obs3_workers_${RUN_TAG}}"
 
@@ -255,10 +255,10 @@ write_worker() {
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-REPO_ROOT="/path/to/project/TTRV"
+REPO_ROOT="${PROJECT_ROOT:-/path/to/project}/TTRV"
 VERL_DIR="$REPO_ROOT/verl"
-RUNTIME_ROOT="/path/to/project/ttrv_runtime"
-PYTHON_BIN="/path/to/project/envs/ttrv/bin/python"
+RUNTIME_ROOT="${PROJECT_ROOT:-/path/to/project}/ttrv_runtime"
+PYTHON_BIN="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python"
 MODEL_TAG="__MODEL__"
 KEY="__KEY__"
 TASK_NAME="__TASK__"
@@ -281,11 +281,11 @@ exec > >(tee -a "$RUN_DIR/run.log") 2>&1
 cd "$VERL_DIR"
 
 unset LD_LIBRARY_PATH
-export PATH="/path/to/project/envs/ttrv/bin:$PATH"
+export PATH="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin:$PATH"
 export PYTHON_BIN
 export CUDA_VISIBLE_DEVICES="__DEVICES__"
 export NO_GPU=2
-export DATA_LOCAL_DIR=/path/to/datasets/verl_data
+export DATA_LOCAL_DIR=${DATASET_ROOT:-/path/to/datasets}/verl_data
 export BACKBONE_PATH="$RUNTIME_ROOT/models/OpenGVLab/InternVL3-2B"
 export HF_HOME="$RUNTIME_ROOT/hf_home"
 export HF_MODULES_CACHE="$RUNTIME_ROOT/hf_home/modules"

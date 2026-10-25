@@ -6,9 +6,9 @@ set -Eeuo pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 REPO_ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
-PYTHON_BIN="${PYTHON_BIN:-/path/to/project/envs/ttrv/bin/python}"
-DATA_ROOT="${DATA_ROOT:-/path/to/datasets}"
-RUNTIME_ROOT="${RUNTIME_ROOT:-/path/to/project/ttrv_runtime}"
+PYTHON_BIN="${PYTHON_BIN:-${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python}"
+DATA_ROOT="${DATA_ROOT:-${DATASET_ROOT:-/path/to/datasets}}"
+RUNTIME_ROOT="${RUNTIME_ROOT:-${PROJECT_ROOT:-/path/to/project}/ttrv_runtime}"
 BASE_MODEL="${BASE_MODEL:-$RUNTIME_ROOT/models/OpenGVLab/InternVL3-2B}"
 RUN_TAG="${RUN_TAG:-$(date +%Y%m%d_%H%M%S)}"
 EXP_ROOT="${EXP_ROOT:-$DATA_ROOT/experiments/internvl3_attention_viz_${RUN_TAG}}"

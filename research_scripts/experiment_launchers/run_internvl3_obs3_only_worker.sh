@@ -10,13 +10,13 @@ set -Eeuo pipefail
 EXP_ROOT="${1:?Usage: bash run_internvl3_obs3_only_worker.sh EXP_ROOT RUN_TAG}"
 RUN_TAG="${2:?Usage: bash run_internvl3_obs3_only_worker.sh EXP_ROOT RUN_TAG}"
 
-REPO_ROOT=/path/to/project/TTRV
-PYTHON_BIN=/path/to/project/envs/ttrv/bin/python
-BASE_MODEL=/path/to/project/ttrv_runtime/models/OpenGVLab/InternVL3-2B
+REPO_ROOT=${PROJECT_ROOT:-/path/to/project}/TTRV
+PYTHON_BIN=${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python
+BASE_MODEL=${PROJECT_ROOT:-/path/to/project}/ttrv_runtime/models/OpenGVLab/InternVL3-2B
 ATTENTION_SCRIPT="$REPO_ROOT/attention_visualization/attention_viz.py"
 SCREEN_SCRIPT="$REPO_ROOT/attention_visualization/obs3_screen.py"
 
-SOURCE_RUN=/path/to/datasets/experiments/internvl3_obs_overnight_20260730_041611
+SOURCE_RUN=${DATASET_ROOT:-/path/to/datasets}/experiments/internvl3_obs_overnight_20260730_041611
 SOURCE_CANDIDATES="$SOURCE_RUN/inputs/candidates_expanded_all.jsonl"
 SOURCE_PROMPT_AUDIT="$SOURCE_RUN/inputs/prompt_token_audit.json"
 EXPECTED_CANDIDATE_SHA256=c3e140e66b69b1e52fa137cc7f77816b60e81b4714092584b285e17857de9127

@@ -3,6 +3,10 @@
 
 from __future__ import annotations
 
+import os as _anon_os
+_ANON_DATASET_ROOT = _anon_os.environ.get('DATASET_ROOT', '/path/to/datasets')
+
+
 import argparse
 import json
 import re
@@ -25,36 +29,36 @@ COMPARISONS = (
     Comparison(
         name="MME",
         kind="closed",
-        ours_path="/path/to/datasets/experiments/closed_choice_pass8_ckpt_ttrv_20260709_052643/best_ckpt_pass8_mme20/validation_groups.jsonl",
-        ttrv_path="/path/to/datasets/experiments/closed_choice_pass8_ckpt_ttrv_20260709_052643/ttrv_official_mme20_train_s10_s20_pass8/validation_groups.jsonl",
+        ours_path=f'{_ANON_DATASET_ROOT}/experiments/closed_choice_pass8_ckpt_ttrv_20260709_052643/best_ckpt_pass8_mme20/validation_groups.jsonl',
+        ttrv_path=f'{_ANON_DATASET_ROOT}/experiments/closed_choice_pass8_ckpt_ttrv_20260709_052643/ttrv_official_mme20_train_s10_s20_pass8/validation_groups.jsonl',
         ttrv_variant="official step20",
     ),
     Comparison(
         name="AI2D",
         kind="closed",
-        ours_path="/path/to/datasets/experiments/closed_choice_pass8_ckpt_ttrv_20260709_052643/best_ckpt_pass8_ai2d20/validation_groups.jsonl",
-        ttrv_path="/path/to/datasets/experiments/closed_choice_pass8_ckpt_ttrv_20260709_052643/ttrv_official_ai2d20_train_s10_s20_pass8/validation_groups.jsonl",
+        ours_path=f'{_ANON_DATASET_ROOT}/experiments/closed_choice_pass8_ckpt_ttrv_20260709_052643/best_ckpt_pass8_ai2d20/validation_groups.jsonl',
+        ttrv_path=f'{_ANON_DATASET_ROOT}/experiments/closed_choice_pass8_ckpt_ttrv_20260709_052643/ttrv_official_ai2d20_train_s10_s20_pass8/validation_groups.jsonl',
         ttrv_variant="official step20",
     ),
     Comparison(
         name="VisualSimpleQA",
         kind="open",
-        ours_path="/path/to/datasets/experiments/visual_dep_reward_direct_answer_mask_sweep_resume_20260708_112944/visualsimpleqa_mask045_coef002_z1/validation_flat.jsonl",
-        ttrv_path="/path/to/datasets/experiments/visualsimpleqa_da_method_direct_answer_aok_tune_ttrv_valid_20260626_1155_visualsimpleqa_frequency_valid_entropy/validation_flat.jsonl",
+        ours_path=f'{_ANON_DATASET_ROOT}/experiments/visual_dep_reward_direct_answer_mask_sweep_resume_20260708_112944/visualsimpleqa_mask045_coef002_z1/validation_flat.jsonl',
+        ttrv_path=f'{_ANON_DATASET_ROOT}/experiments/visualsimpleqa_da_method_direct_answer_aok_tune_ttrv_valid_20260626_1155_visualsimpleqa_frequency_valid_entropy/validation_flat.jsonl',
         ttrv_variant="frequency_valid_entropy final",
     ),
     Comparison(
         name="OCRBench",
         kind="open",
-        ours_path="/path/to/datasets/experiments/visual_dep_reward_direct_answer_mask_sweep_resume_20260708_112944/ocrbench_v1_mask030_coef005/validation_flat.jsonl",
-        ttrv_path="/path/to/datasets/experiments/ocrbench_v1_method_direct_answer_aok_tune_ttrv_valid_20260626_1155_ocrbench_v1_frequency_valid_entropy/validation_flat.jsonl",
+        ours_path=f'{_ANON_DATASET_ROOT}/experiments/visual_dep_reward_direct_answer_mask_sweep_resume_20260708_112944/ocrbench_v1_mask030_coef005/validation_flat.jsonl',
+        ttrv_path=f'{_ANON_DATASET_ROOT}/experiments/ocrbench_v1_method_direct_answer_aok_tune_ttrv_valid_20260626_1155_ocrbench_v1_frequency_valid_entropy/validation_flat.jsonl',
         ttrv_variant="frequency_valid_entropy final",
     ),
     Comparison(
         name="A-OKVQA",
         kind="open",
-        ours_path="/path/to/datasets/experiments/visual_dep_reward_direct_answer_20260706_163934/aokvqa_da_val_coef005/validation_flat.jsonl",
-        ttrv_path="/path/to/datasets/experiments/aokvqa_da_val_method_direct_answer_visual_sweep_aok_ttrv_20260626_152214_aokvqa_ttrv_official_frequency_entropy/validation_flat.jsonl",
+        ours_path=f'{_ANON_DATASET_ROOT}/experiments/visual_dep_reward_direct_answer_20260706_163934/aokvqa_da_val_coef005/validation_flat.jsonl',
+        ttrv_path=f'{_ANON_DATASET_ROOT}/experiments/aokvqa_da_val_method_direct_answer_visual_sweep_aok_ttrv_20260626_152214_aokvqa_ttrv_official_frequency_entropy/validation_flat.jsonl',
         ttrv_variant="official frequency_entropy final",
     ),
 )

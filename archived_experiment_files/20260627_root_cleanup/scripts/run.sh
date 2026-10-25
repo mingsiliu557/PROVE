@@ -9,11 +9,11 @@ cd "$ROOT_DIR"
 
 export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0,1}"
 export NO_GPU="${NO_GPU:-2}"
-export DATA_ROOT="${DATA_ROOT:-/path/to/datasets}"
+export DATA_ROOT="${DATA_ROOT:-${DATASET_ROOT:-/path/to/datasets}}"
 export DATA_LOCAL_DIR="${DATA_LOCAL_DIR:-$DATA_ROOT/verl_data}"
 export HF_HOME="${HF_HOME:-$DATA_ROOT/hf_home}"
 export BACKBONE_PATH="${BACKBONE_PATH:-$DATA_ROOT/models/OpenGVLab/InternVL3-2B}"
-export PYTHON_BIN="${PYTHON_BIN:-/path/to/project/envs/ttrv/bin/python}"
+export PYTHON_BIN="${PYTHON_BIN:-${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python}"
 
 export TASK_NAME="${TASK_NAME:-mme_20}"
 export EPISODE="${EPISODE:-2}"

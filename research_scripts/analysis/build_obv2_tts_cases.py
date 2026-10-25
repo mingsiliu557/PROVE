@@ -3,6 +3,11 @@
 
 from __future__ import annotations
 
+import os as _anon_os
+_ANON_DATASET_ROOT = _anon_os.environ.get('DATASET_ROOT', '/path/to/datasets')
+_ANON_PROJECT_ROOT = _anon_os.environ.get('PROJECT_ROOT', '/path/to/project')
+
+
 import json
 import math
 import re
@@ -10,9 +15,9 @@ import shutil
 from pathlib import Path
 
 
-REPO_ROOT = Path("/path/to/project/TTRV")
+REPO_ROOT = Path(f'{_ANON_PROJECT_ROOT}/TTRV')
 EXPERIMENT_ROOT = Path(
-    "/path/to/datasets/experiments/step0_reward_selection32_20260711_020518"
+    f'{_ANON_DATASET_ROOT}/experiments/step0_reward_selection32_20260711_020518'
 )
 OUTPUT_ROOT = REPO_ROOT / "obv2_cases"
 FIXED_BIN_MAP = (

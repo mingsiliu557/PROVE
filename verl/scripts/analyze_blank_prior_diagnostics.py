@@ -3,6 +3,11 @@
 
 from __future__ import annotations
 
+import os as _anon_os
+_ANON_DATASET_ROOT = _anon_os.environ.get('DATASET_ROOT', '/path/to/datasets')
+_ANON_PROJECT_ROOT = _anon_os.environ.get('PROJECT_ROOT', '/path/to/project')
+
+
 import argparse
 import json
 import math
@@ -11,16 +16,16 @@ from typing import Any, Callable
 
 
 BLANK_ROOT = Path(
-    "/path/to/datasets/experiments/"
+    f'{_ANON_DATASET_ROOT}/experiments/'
     "blank_image_drop_closed_choice_20260710_064900"
 )
 TTRV_HISTORICAL_GREEDY_MACRO_ACC = 64.75
 TTRV_GREEDY_LAUNCH_DIR = Path(
-    "/path/to/project/TTRV/outputs/launch_scripts/"
+    f'{_ANON_PROJECT_ROOT}/TTRV/outputs/launch_scripts/'
     "p0_valid_ttrv_official_fix_20260612_095939"
 )
 TTRV_CLEANUP_MANIFEST = Path(
-    "/path/to/project/TTRV/outputs/"
+    f'{_ANON_PROJECT_ROOT}/TTRV/outputs/'
     "cleanup_sota_20260617_deleted_dirs.txt"
 )
 TTRV_RETAINED_AGGREGATE = BLANK_ROOT / "blank_image_drop_summary.md"
@@ -31,7 +36,7 @@ DATASETS: dict[str, dict[str, Any]] = {
         "name": "MME20",
         "labels": "AB",
         "ours_normal": Path(
-            "/path/to/datasets/experiments/"
+            f'{_ANON_DATASET_ROOT}/experiments/'
             "visual_dep_reward_coef_sweep_A_20260705_131304/"
             "mme_coef002_ori000/validation_step10_20_flat.jsonl"
         ),
@@ -42,7 +47,7 @@ DATASETS: dict[str, dict[str, Any]] = {
         "name": "AI2D20",
         "labels": "ABCD",
         "ours_normal": Path(
-            "/path/to/datasets/experiments/"
+            f'{_ANON_DATASET_ROOT}/experiments/'
             "visual_dep_reward_coef_sweep_A_20260705_131304/"
             "ai2d_coef003_ori000/validation_step10_20_flat.jsonl"
         ),
@@ -53,7 +58,7 @@ DATASETS: dict[str, dict[str, Any]] = {
         "name": "RealWorldQA-HQ",
         "labels": "ABCD",
         "ours_normal": Path(
-            "/path/to/datasets/experiments/"
+            f'{_ANON_DATASET_ROOT}/experiments/'
             "visual_dep_reward_coef_sweep_remaining_20260706_092444/"
             "rwq_coef005_ori000/validation_step10_20_flat.jsonl"
         ),
@@ -64,7 +69,7 @@ DATASETS: dict[str, dict[str, Any]] = {
         "name": "SEED20",
         "labels": "ABCD",
         "ours_normal": Path(
-            "/path/to/datasets/experiments/"
+            f'{_ANON_DATASET_ROOT}/experiments/'
             "visual_dep_reward_coef_sweep_A_20260705_131304/"
             "seed_coef003_ori003/validation_step10_20_flat.jsonl"
         ),
@@ -75,7 +80,7 @@ DATASETS: dict[str, dict[str, Any]] = {
         "name": "MathVista-HQ",
         "labels": "ABCDEF",
         "ours_normal": Path(
-            "/path/to/datasets/experiments/"
+            f'{_ANON_DATASET_ROOT}/experiments/'
             "visual_dep_reward_valid_only_closed_choice_attn_params_20260705_085958/"
             "mathvista20_hq/validation_step10_20_flat.jsonl"
         ),
@@ -86,7 +91,7 @@ DATASETS: dict[str, dict[str, Any]] = {
         "name": "MathVerse-fixed",
         "labels": "ABCDEF",
         "ours_normal": Path(
-            "/path/to/datasets/experiments/"
+            f'{_ANON_DATASET_ROOT}/experiments/'
             "visual_dep_reward_coef_sweep_remaining_20260706_092444/"
             "mathverse_coef005_ori002/validation_step10_20_flat.jsonl"
         ),

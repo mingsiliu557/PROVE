@@ -2,8 +2,8 @@
 set -Eeuo pipefail
 
 RUN_TAG="${RUN_TAG:-$(date +%Y%m%d_%H%M%S)}"
-REPO_ROOT="/path/to/project/TTRV"
-DATA_ROOT="/path/to/datasets"
+REPO_ROOT="${PROJECT_ROOT:-/path/to/project}/TTRV"
+DATA_ROOT="${DATASET_ROOT:-/path/to/datasets}"
 EXP_ROOT="$DATA_ROOT/experiments/openended_visual_dep_ttrv_valid_ckpt_only_${RUN_TAG}"
 CKPT_ROOT="$DATA_ROOT/checkpoints/openended_visual_dep_ttrv_valid_${RUN_TAG}"
 QUEUE_ID="${QUEUE_ID:-q-20250901110548-6w2bl}"
@@ -42,10 +42,10 @@ write_worker() {
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-REPO_ROOT="/path/to/project/TTRV"
+REPO_ROOT="${PROJECT_ROOT:-/path/to/project}/TTRV"
 VERL_DIR="$REPO_ROOT/verl"
-RUNTIME_ROOT="/path/to/project/ttrv_runtime"
-DATA_ROOT="/path/to/datasets"
+RUNTIME_ROOT="${PROJECT_ROOT:-/path/to/project}/ttrv_runtime"
+DATA_ROOT="${DATASET_ROOT:-/path/to/datasets}"
 EXP_ROOT="__EXP_ROOT__"
 CKPT_ROOT="__CKPT_ROOT__"
 RUN_NAME="__KEY__"
@@ -74,8 +74,8 @@ trap 'status=$?; printf "[%s] FAILED status=%s end=%s\n" "$RUN_NAME" "$status" "
 exec > >(tee -a "$RUN_DIR/run.log") 2>&1
 cd "$VERL_DIR"
 
-export PATH="/path/to/project/envs/ttrv/bin:$PATH"
-export PYTHON_BIN="/path/to/project/envs/ttrv/bin/python"
+export PATH="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin:$PATH"
+export PYTHON_BIN="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python"
 export CUDA_VISIBLE_DEVICES=0,1
 export NO_GPU=2
 export DATA_LOCAL_DIR="$DATA_ROOT/verl_data"

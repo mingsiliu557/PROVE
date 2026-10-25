@@ -3,6 +3,10 @@
 
 from __future__ import annotations
 
+import os as _anon_os
+_ANON_DATASET_ROOT = _anon_os.environ.get('DATASET_ROOT', '/path/to/datasets')
+
+
 import argparse
 import csv
 import json
@@ -18,7 +22,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 ROOT = Path(__file__).resolve().parent
 DEFAULT_SOURCE = Path(
-    "/path/to/datasets/experiments/"
+    f'{_ANON_DATASET_ROOT}/experiments/'
     "internvl3_obs_overnight_20260730_041611/stages/"
     "10_obs1_prove_selection32/output/selection_groups.jsonl"
 )

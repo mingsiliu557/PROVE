@@ -3,7 +3,7 @@ set -Eeuo pipefail
 
 # Submit exactly one inference-only worker. This script does not train, merge,
 # mutate checkpoints, download assets, or request more than one GPU.
-REPO_ROOT=/path/to/project/TTRV
+REPO_ROOT=${PROJECT_ROOT:-/path/to/project}/TTRV
 WORKSPACE="$REPO_ROOT/attention_visualization/obs3_answer_content_attention_rwq_seed_20260731"
 WORKER="$WORKSPACE/run_worker_retained_contrast.sh"
 RUN_TAG="${RUN_TAG:-$(date -u +%Y%m%d_%H%M%S)_retained_contrast_99}"

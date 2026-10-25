@@ -3,9 +3,9 @@ set -Eeuo pipefail
 
 RUN_ROOT=${1:-}
 RUN_TAG=${2:-}
-REPO_ROOT=/path/to/project/TTRV
+REPO_ROOT=${PROJECT_ROOT:-/path/to/project}/TTRV
 WORKSPACE="$REPO_ROOT/attention_visualization/obs3_answer_content_attention_rwq_seed_20260731"
-PYTHON_BIN=/path/to/project/envs/ttrv/bin/python
+PYTHON_BIN=${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python
 SOURCE_POOL="$WORKSPACE/pool/all_heldout_candidates.jsonl"
 SOURCE_POOL_SUMMARY="$WORKSPACE/pool/all_heldout_candidates.summary.json"
 SOURCE_STRICT_MANIFEST="$WORKSPACE/pool/strict_retained_contrast_99.jsonl"

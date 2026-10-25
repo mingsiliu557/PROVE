@@ -6,8 +6,8 @@ set -Eeuo pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 REPO_ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
-PYTHON_BIN="${PYTHON_BIN:-/path/to/project/envs/ttrv/bin/python}"
-EXP_ROOT="${EXP_ROOT:-/path/to/datasets/experiments/internvl3_attention_viz_20260722_140000}"
+PYTHON_BIN="${PYTHON_BIN:-${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python}"
+EXP_ROOT="${EXP_ROOT:-${DATASET_ROOT:-/path/to/datasets}/experiments/internvl3_attention_viz_20260722_140000}"
 CANDIDATES="${CANDIDATES:-$EXP_ROOT/candidates_rwq_all.jsonl}"
 OUTPUT_DIR="${OUTPUT_DIR:-$EXP_ROOT/probe_rwq_all}"
 LOG_FILE="${LOG_FILE:-$EXP_ROOT/probe_rwq_all.log}"

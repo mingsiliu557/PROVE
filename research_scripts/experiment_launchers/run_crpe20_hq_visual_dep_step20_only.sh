@@ -2,8 +2,8 @@
 set -Eeuo pipefail
 
 RUN_TAG="${RUN_TAG:-$(date +%Y%m%d_%H%M%S)}"
-REPO_ROOT="/path/to/project/TTRV"
-EXP_ROOT="/path/to/datasets/experiments/visual_dep_crpe20_hq_step20_only_${RUN_TAG}"
+REPO_ROOT="${PROJECT_ROOT:-/path/to/project}/TTRV"
+EXP_ROOT="${DATASET_ROOT:-/path/to/datasets}/experiments/visual_dep_crpe20_hq_step20_only_${RUN_TAG}"
 QUEUE_ID="${QUEUE_ID:-q-20250901110548-6w2bl}"
 FLAVOR_ID="${FLAVOR_ID:-ml.pni2l.7xlarge}"
 WORKER="$EXP_ROOT/worker_visual_dep_crpe20_hq_step20.sh"
@@ -14,10 +14,10 @@ cat > "$WORKER" <<'WORKER_EOF'
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-REPO_ROOT="/path/to/project/TTRV"
+REPO_ROOT="${PROJECT_ROOT:-/path/to/project}/TTRV"
 VERL_DIR="$REPO_ROOT/verl"
-RUNTIME_ROOT="/path/to/project/ttrv_runtime"
-DATA_ROOT="/path/to/datasets"
+RUNTIME_ROOT="${PROJECT_ROOT:-/path/to/project}/ttrv_runtime"
+DATA_ROOT="${DATASET_ROOT:-/path/to/datasets}"
 EXP_ROOT="__EXP_ROOT__"
 KEY="visual_dep_crpe20_hq_step20"
 RUN_TAG="$(basename "$EXP_ROOT")"
@@ -30,8 +30,8 @@ exec > >(tee -a "$RUN_DIR/run.log") 2>&1
 trap 'status=$?; echo "[$KEY] FAILED status=$status end=$(date)"; touch "$RUN_DIR/FAILED"; ray stop --force || true; exit $status' ERR
 cd "$VERL_DIR"
 
-export PATH="/path/to/project/envs/ttrv/bin:$PATH"
-export PYTHON_BIN="/path/to/project/envs/ttrv/bin/python"
+export PATH="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin:$PATH"
+export PYTHON_BIN="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python"
 export CUDA_VISIBLE_DEVICES=0,1
 export NO_GPU=2
 export DATA_LOCAL_DIR="$DATA_ROOT/verl_data"

@@ -3,6 +3,10 @@
 
 from __future__ import annotations
 
+import os as _anon_os
+_ANON_PROJECT_ROOT = _anon_os.environ.get('PROJECT_ROOT', '/path/to/project')
+
+
 import csv
 import json
 import shutil
@@ -15,7 +19,7 @@ import numpy as np
 from PIL import Image
 
 
-ROOT = Path("/path/to/project/TTRV")
+ROOT = Path(f'{_ANON_PROJECT_ROOT}/TTRV')
 SOURCE = ROOT / "case_studies/ours_correct_ttrv_wrong_20260726/curated_cases.jsonl"
 OUTPUT = ROOT / "observation_visualizations_20260728/obs3_cases"
 CASE_IDS = ("mme_20-test-738", "mme_20-test-447", "ai2d_20-test-33")

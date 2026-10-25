@@ -5,9 +5,9 @@ set -Eeuo pipefail
 # Observation worker script, then exit so the allocation is released.
 # This manager is intentionally blocking; launch it in tmux for overnight use.
 
-REPO_ROOT=/path/to/project/TTRV
+REPO_ROOT=${PROJECT_ROOT:-/path/to/project}/TTRV
 WORKER="${WORKER:-$REPO_ROOT/research_scripts/experiment_launchers/run_internvl3_obs_overnight_worker.sh}"
-DATA_ROOT=/path/to/datasets
+DATA_ROOT=${DATASET_ROOT:-/path/to/datasets}
 RUN_TAG="${RUN_TAG:-$(date -u +%Y%m%d_%H%M%S)}"
 EXP_ROOT="${EXP_ROOT:-$DATA_ROOT/experiments/internvl3_obs_overnight_${RUN_TAG}}"
 RESOURCE_QUEUE_ID="${RESOURCE_QUEUE_ID:-q-20250901110548-6w2bl}"

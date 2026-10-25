@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-REPO_ROOT="/path/to/project/TTRV"
+REPO_ROOT="${PROJECT_ROOT:-/path/to/project}/TTRV"
 SCRIPT_PATH="$REPO_ROOT/observation_visualizations_20260728/run_aokvqa_prove_selection32.sh"
 RUN_TAG="${RUN_TAG:-$(date +%Y%m%d_%H%M%S)}"
 EXP_ROOT="${EXP_ROOT:-$REPO_ROOT/observation_visualizations_20260728/prove_selection_runs/aokvqa_${RUN_TAG}}"
@@ -30,18 +30,18 @@ run_worker() {
 
   unset LD_LIBRARY_PATH
   cd "$REPO_ROOT/verl"
-  export PATH="/path/to/project/envs/ttrv/bin:$PATH"
-  export PYTHON_BIN="/path/to/project/envs/ttrv/bin/python"
+  export PATH="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin:$PATH"
+  export PYTHON_BIN="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python"
   export CUDA_VISIBLE_DEVICES=0,1
   export NO_GPU=2
   export VLLM_USE_V1=0
   export HF_HUB_OFFLINE=1
   export TRANSFORMERS_OFFLINE=1
-  export HF_HOME="/path/to/project/ttrv_runtime/hf_home"
+  export HF_HOME="${PROJECT_ROOT:-/path/to/project}/ttrv_runtime/hf_home"
   export HF_MODULES_CACHE="$HF_HOME/modules"
   export TRANSFORMERS_CACHE="$HF_HOME/transformers"
-  export XDG_CACHE_HOME="/path/to/project/ttrv_runtime/xdg_cache"
-  export BACKBONE_PATH="/path/to/project/ttrv_runtime/models/OpenGVLab/InternVL3-2B"
+  export XDG_CACHE_HOME="${PROJECT_ROOT:-/path/to/project}/ttrv_runtime/xdg_cache"
+  export BACKBONE_PATH="${PROJECT_ROOT:-/path/to/project}/ttrv_runtime/models/OpenGVLab/InternVL3-2B"
   export DATA_LOCAL_DIR="$REPO_ROOT/observation_visualizations_20260728/data"
   export TASK=aokvqa_obs1_prove_selection32
   export EPISODE=2

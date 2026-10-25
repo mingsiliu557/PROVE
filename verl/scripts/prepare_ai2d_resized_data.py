@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+
+import os as _anon_os
+_ANON_DATASET_ROOT = _anon_os.environ.get('DATASET_ROOT', '/path/to/datasets')
+
 import argparse
 import copy
 import json
@@ -64,10 +68,10 @@ def _write_split(rows: list[dict[str, Any]], output_task_dir: Path, split: str) 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description='Create an AI2D data copy with normalized/resized RGB images for InternVL/vLLM stability.')
-    parser.add_argument('--source-dir', default='/path/to/datasets/verl_data/ai2d_20')
-    parser.add_argument('--source-image-root', default='/path/to/datasets/ai2d')
-    parser.add_argument('--output-root', default='/path/to/datasets/verl_data/ai2d_20_rgb_max896')
-    parser.add_argument('--resized-image-root', default='/path/to/datasets/ai2d_rgb_max896')
+    parser.add_argument('--source-dir', default=f'{_ANON_DATASET_ROOT}/verl_data/ai2d_20')
+    parser.add_argument('--source-image-root', default=f'{_ANON_DATASET_ROOT}/ai2d')
+    parser.add_argument('--output-root', default=f'{_ANON_DATASET_ROOT}/verl_data/ai2d_20_rgb_max896')
+    parser.add_argument('--resized-image-root', default=f'{_ANON_DATASET_ROOT}/ai2d_rgb_max896')
     parser.add_argument('--task-name', default='ai2d_20')
     parser.add_argument('--max-side', type=int, default=896)
     args = parser.parse_args()

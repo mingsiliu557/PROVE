@@ -3,6 +3,10 @@
 
 from __future__ import annotations
 
+import os as _anon_os
+_ANON_DATASET_ROOT = _anon_os.environ.get('DATASET_ROOT', '/path/to/datasets')
+
+
 import csv
 import json
 import shutil
@@ -27,7 +31,7 @@ from build_observation_visualizations import (
 
 ROOT = Path(__file__).resolve().parent
 SOURCE_JSONL = Path(
-    "/path/to/datasets/experiments/obs1_density_dose_response_qwen_20260724/"
+    f'{_ANON_DATASET_ROOT}/experiments/obs1_density_dose_response_qwen_20260724/'
     "reconstruction/reward_dilution_all_750_questions.jsonl"
 )
 SELECTED_JSON = ROOT / "selected_cases.json"

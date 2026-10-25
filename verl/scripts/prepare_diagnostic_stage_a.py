@@ -3,6 +3,10 @@
 
 from __future__ import annotations
 
+import os as _anon_os
+_ANON_DATASET_ROOT = _anon_os.environ.get('DATASET_ROOT', '/path/to/datasets')
+
+
 import argparse
 import copy
 import hashlib
@@ -300,7 +304,7 @@ def _prepare_one(
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data-root", type=Path, default=Path("/path/to/datasets/verl_data"))
+    parser.add_argument("--data-root", type=Path, default=Path(f'{_ANON_DATASET_ROOT}/verl_data'))
     parser.add_argument("--output-root", type=Path, required=True)
     parser.add_argument("--subset-size", type=int, default=250)
     parser.add_argument("--subset-seed", type=int, default=42)

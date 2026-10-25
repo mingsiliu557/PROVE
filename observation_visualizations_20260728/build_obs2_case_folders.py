@@ -3,6 +3,10 @@
 
 from __future__ import annotations
 
+import os as _anon_os
+_ANON_DATASET_ROOT = _anon_os.environ.get('DATASET_ROOT', '/path/to/datasets')
+
+
 import csv
 import json
 import math
@@ -30,7 +34,7 @@ from build_observation_visualizations import (
 ROOT = Path(__file__).resolve().parent
 SELECTION_JSONL = ROOT.parent / "outputs/diagnostic_obs2_fixed_bin_selection_20260723/question_selection.jsonl"
 DUMP_ROOT = Path(
-    "/path/to/datasets/experiments/diagnostic_stage_a_20260718_043946/dumps"
+    f'{_ANON_DATASET_ROOT}/experiments/diagnostic_stage_a_20260718_043946/dumps'
 )
 OUTPUT_ROOT = ROOT / "obs2_cases"
 

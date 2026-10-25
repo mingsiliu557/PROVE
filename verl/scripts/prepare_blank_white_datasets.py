@@ -8,6 +8,10 @@ the source file is available.
 
 from __future__ import annotations
 
+import os as _anon_os
+_ANON_DATASET_ROOT = _anon_os.environ.get('DATASET_ROOT', '/path/to/datasets')
+
+
 import argparse
 import copy
 import hashlib
@@ -147,8 +151,8 @@ def process_task(data_root: Path, image_root: Path, task: str, suffix: str) -> d
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data-root", type=Path, default=Path("/path/to/datasets/verl_data"))
-    parser.add_argument("--image-root", type=Path, default=Path("/path/to/datasets/blank_white_images"))
+    parser.add_argument("--data-root", type=Path, default=Path(f'{_ANON_DATASET_ROOT}/verl_data'))
+    parser.add_argument("--image-root", type=Path, default=Path(f'{_ANON_DATASET_ROOT}/blank_white_images'))
     parser.add_argument("--suffix", default="_white_blank")
     parser.add_argument("--tasks", nargs="+", required=True)
     parser.add_argument("--summary-json", type=Path, default=None)

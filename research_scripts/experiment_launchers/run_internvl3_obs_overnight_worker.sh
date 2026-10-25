@@ -11,11 +11,11 @@ set -Eeuo pipefail
 EXP_ROOT="${1:?Usage: bash run_internvl3_obs_overnight_worker.sh EXP_ROOT RUN_TAG}"
 RUN_TAG="${2:?Usage: bash run_internvl3_obs_overnight_worker.sh EXP_ROOT RUN_TAG}"
 
-REPO_ROOT=/path/to/project/TTRV
+REPO_ROOT=${PROJECT_ROOT:-/path/to/project}/TTRV
 VERL_DIR="$REPO_ROOT/verl"
-RUNTIME_ROOT=/path/to/project/ttrv_runtime
-PYTHON_BIN=/path/to/project/envs/ttrv/bin/python
-RAY_BIN=/path/to/project/envs/ttrv/bin/ray
+RUNTIME_ROOT=${PROJECT_ROOT:-/path/to/project}/ttrv_runtime
+PYTHON_BIN=${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python
+RAY_BIN=${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/ray
 BASE_MODEL="$RUNTIME_ROOT/models/OpenGVLab/InternVL3-2B"
 
 OBS1_DATA_ROOT="$REPO_ROOT/observation_visualizations_20260728/data"
@@ -32,7 +32,7 @@ PROMPT_AUDIT_SCRIPT="$VERL_DIR/scripts/audit_internvl3_prompt_tokens.py"
 OBS3_STATIC_DIR="$REPO_ROOT/attention_visualization/obs3_validation_attention_20260728"
 OBS3_EXPANDED_CANDIDATES="$OBS3_STATIC_DIR/candidates_expanded_all.jsonl"
 OBS3_EXPANDED_SUMMARY="$OBS3_STATIC_DIR/candidates_expanded_summary.json"
-OBS3_SMOKE_CANDIDATES=/path/to/datasets/experiments/internvl3_obs3_validation_attention_20260728/probe/exact_candidates.jsonl
+OBS3_SMOKE_CANDIDATES=${DATASET_ROOT:-/path/to/datasets}/experiments/internvl3_obs3_validation_attention_20260728/probe/exact_candidates.jsonl
 
 STAGE_ROOT="$EXP_ROOT/stages"
 INPUT_ROOT="$EXP_ROOT/inputs"
@@ -407,7 +407,7 @@ run_obs1_selection() {
 
     unset LD_LIBRARY_PATH
     cd "$VERL_DIR"
-    export PATH="/path/to/project/envs/ttrv/bin:$PATH"
+    export PATH="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin:$PATH"
     export PYTHON_BIN
     export CUDA_VISIBLE_DEVICES=0,1
     export NO_GPU=2

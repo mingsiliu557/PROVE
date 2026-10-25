@@ -3,10 +3,10 @@ set -Eeuo pipefail
 
 MODE="${MODE:-full}"
 RUN_TAG="${RUN_TAG:-$(date +%Y%m%d_%H%M%S)}"
-REPO_ROOT="/path/to/project/TTRV"
-PYTHON_BIN="/path/to/project/envs/ttrv/bin/python"
-DATA_ROOT="/path/to/datasets"
-RUNTIME_ROOT="/path/to/project/ttrv_runtime"
+REPO_ROOT="${PROJECT_ROOT:-/path/to/project}/TTRV"
+PYTHON_BIN="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python"
+DATA_ROOT="${DATASET_ROOT:-/path/to/datasets}"
+RUNTIME_ROOT="${PROJECT_ROOT:-/path/to/project}/ttrv_runtime"
 QUEUE_ID="${QUEUE_ID:-q-20250901110548-6w2bl}"
 FLAVOR_ID="${FLAVOR_ID:-ml.pni2l.7xlarge}"
 EXP_ROOT="${EXP_ROOT:-$DATA_ROOT/experiments/self_certainty_selection_${MODE}_${RUN_TAG}}"
@@ -28,10 +28,10 @@ cat > "$WORKER" <<'WORKER_EOF'
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-REPO_ROOT="/path/to/project/TTRV"
-PYTHON_BIN="/path/to/project/envs/ttrv/bin/python"
-DATA_ROOT="/path/to/datasets"
-RUNTIME_ROOT="/path/to/project/ttrv_runtime"
+REPO_ROOT="${PROJECT_ROOT:-/path/to/project}/TTRV"
+PYTHON_BIN="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python"
+DATA_ROOT="${DATASET_ROOT:-/path/to/datasets}"
+RUNTIME_ROOT="${PROJECT_ROOT:-/path/to/project}/ttrv_runtime"
 SCORER="$REPO_ROOT/verl/scripts/score_self_certainty_selection.py"
 EXP_ROOT="__EXP_ROOT__"
 MODE="__MODE__"
@@ -44,7 +44,7 @@ exec > >(tee -a "$EXP_ROOT/worker.log") 2>&1
 cd "$REPO_ROOT"
 
 unset LD_LIBRARY_PATH
-export PATH="/path/to/project/envs/ttrv/bin:$PATH"
+export PATH="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin:$PATH"
 export HF_HOME="$RUNTIME_ROOT/hf_home"
 export HF_MODULES_CACHE="$RUNTIME_ROOT/hf_home/modules"
 export TRANSFORMERS_CACHE="$RUNTIME_ROOT/hf_home/transformers"

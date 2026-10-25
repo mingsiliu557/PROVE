@@ -3,11 +3,11 @@ set -Eeuo pipefail
 
 RUN_TAG="${RUN_TAG:-$(date +%Y%m%d_%H%M%S)}"
 MODE="${MODE:-full}"
-REPO_ROOT="/path/to/project/TTRV"
+REPO_ROOT="${PROJECT_ROOT:-/path/to/project}/TTRV"
 VERL_DIR="$REPO_ROOT/verl"
-DATA_ROOT="/path/to/datasets"
-RUNTIME_ROOT="/path/to/project/ttrv_runtime"
-PYTHON_BIN="/path/to/project/envs/ttrv/bin/python"
+DATA_ROOT="${DATASET_ROOT:-/path/to/datasets}"
+RUNTIME_ROOT="${PROJECT_ROOT:-/path/to/project}/ttrv_runtime"
+PYTHON_BIN="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python"
 QUEUE_ID="${QUEUE_ID:-q-20250901110548-6w2bl}"
 FLAVOR_ID="${FLAVOR_ID:-ml.pni2l.7xlarge}"
 SOURCE_EXP_ROOT="${SOURCE_EXP_ROOT:-}"
@@ -24,9 +24,9 @@ FIXED_GPU_COUNT="${FIXED_GPU_COUNT:-4}"
 FIXED_CUDA_VISIBLE_DEVICES="${FIXED_CUDA_VISIBLE_DEVICES:-0,1,2,3}"
 FIXED_TRAIN_BATCH_SIZE="${FIXED_TRAIN_BATCH_SIZE:-$FIXED_GPU_COUNT}"
 MANAGE_FIXED_KEEPALIVE="${MANAGE_FIXED_KEEPALIVE:-1}"
-RAY_BIN="/path/to/project/envs/ttrv/bin/ray"
-KEEPALIVE_PY="${KEEPALIVE_PY:-/path/to/storage/camflow/bin/python}"
-KEEPALIVE_SCRIPT="${KEEPALIVE_SCRIPT:-/path/to/storage/CamFlow-Pami/CamFlow-Code-main/tools/dummy_keepalive_worker.py}"
+RAY_BIN="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/ray"
+KEEPALIVE_PY="${KEEPALIVE_PY:-${STORAGE_ROOT:-/path/to/storage}/camflow/bin/python}"
+KEEPALIVE_SCRIPT="${KEEPALIVE_SCRIPT:-${STORAGE_ROOT:-/path/to/storage}/CamFlow-Pami/CamFlow-Code-main/tools/dummy_keepalive_worker.py}"
 
 case "$MODE" in
   full)
@@ -209,11 +209,11 @@ write_worker() {
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-REPO_ROOT="/path/to/project/TTRV"
+REPO_ROOT="${PROJECT_ROOT:-/path/to/project}/TTRV"
 VERL_DIR="$REPO_ROOT/verl"
-RUNTIME_ROOT="/path/to/project/ttrv_runtime"
-DATA_ROOT="/path/to/datasets"
-PYTHON_BIN="/path/to/project/envs/ttrv/bin/python"
+RUNTIME_ROOT="${PROJECT_ROOT:-/path/to/project}/ttrv_runtime"
+DATA_ROOT="${DATASET_ROOT:-/path/to/datasets}"
+PYTHON_BIN="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python"
 EXP_ROOT="__EXP_ROOT__"
 KEY="__KEY__"
 PASS_NAME="__PASS_NAME__"
@@ -240,7 +240,7 @@ trap 'status=$?; printf "[%s/%s] FAILED status=%s end=%s\n" "$KEY" "$PASS_NAME" 
 exec > >(tee -a "$RUN_DIR/run.log") 2>&1
 cd "$VERL_DIR"
 
-export PATH="/path/to/project/envs/ttrv/bin:$PATH"
+export PATH="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin:$PATH"
 export PYTHON_BIN
 export CUDA_VISIBLE_DEVICES="__CUDA_VISIBLE_DEVICES__"
 export NO_GPU="__GPU_COUNT__"

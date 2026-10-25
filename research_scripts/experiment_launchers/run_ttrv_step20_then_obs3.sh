@@ -6,13 +6,13 @@ set -Eeuo pipefail
 # protocol-locked Obs3 real/shuffle N=32 comparison against ours step 20.
 
 RUN_TAG="${RUN_TAG:-$(date +%Y%m%d_%H%M%S)}"
-REPO_ROOT="/path/to/project/TTRV"
+REPO_ROOT="${PROJECT_ROOT:-/path/to/project}/TTRV"
 VERL_DIR="$REPO_ROOT/verl"
-DATA_ROOT="/path/to/datasets"
-RUNTIME_ROOT="/path/to/project/ttrv_runtime"
-RAY_BIN="/path/to/project/envs/ttrv/bin/ray"
-KEEPALIVE_PY="${KEEPALIVE_PY:-/path/to/storage/camflow/bin/python}"
-KEEPALIVE_SCRIPT="${KEEPALIVE_SCRIPT:-/path/to/storage/CamFlow-Pami/CamFlow-Code-main/tools/dummy_keepalive_worker.py}"
+DATA_ROOT="${DATASET_ROOT:-/path/to/datasets}"
+RUNTIME_ROOT="${PROJECT_ROOT:-/path/to/project}/ttrv_runtime"
+RAY_BIN="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/ray"
+KEEPALIVE_PY="${KEEPALIVE_PY:-${STORAGE_ROOT:-/path/to/storage}/camflow/bin/python}"
+KEEPALIVE_SCRIPT="${KEEPALIVE_SCRIPT:-${STORAGE_ROOT:-/path/to/storage}/CamFlow-Pami/CamFlow-Code-main/tools/dummy_keepalive_worker.py}"
 SHORT_ROOT="${SHORT_ROOT:-$DATA_ROOT/e}"
 TRAIN_ROOT="${TRAIN_ROOT:-$SHORT_ROOT/t20_${RUN_TAG}}"
 OBS3_ROOT="${OBS3_ROOT:-$SHORT_ROOT/o3_${RUN_TAG}}"
@@ -128,8 +128,8 @@ run_training() {
     cd "$VERL_DIR"
 
     unset LD_LIBRARY_PATH RAY_ADDRESS
-    export PATH="/path/to/project/envs/ttrv/bin:$PATH"
-    export PYTHON_BIN="/path/to/project/envs/ttrv/bin/python"
+    export PATH="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin:$PATH"
+    export PYTHON_BIN="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python"
     export CUDA_VISIBLE_DEVICES="$devices"
     export NO_GPU=2
     export DATA_LOCAL_DIR="$DATA_ROOT/verl_data"

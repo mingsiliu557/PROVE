@@ -7,6 +7,11 @@ existing diagnostic artifacts and copies the selected source images.
 
 from __future__ import annotations
 
+import os as _anon_os
+_ANON_DATASET_ROOT = _anon_os.environ.get('DATASET_ROOT', '/path/to/datasets')
+_ANON_PROJECT_ROOT = _anon_os.environ.get('PROJECT_ROOT', '/path/to/project')
+
+
 import json
 import shutil
 import textwrap
@@ -18,12 +23,12 @@ import numpy as np
 from PIL import Image
 
 
-ROOT = Path("/path/to/project/TTRV")
+ROOT = Path(f'{_ANON_PROJECT_ROOT}/TTRV')
 OUT = ROOT / "observation_visualizations_20260728"
 IMAGE_OUT = OUT / "images"
 
 OBS1_RECON = Path(
-    "/path/to/datasets/experiments/obs1_density_dose_response_qwen_20260724/"
+    f'{_ANON_DATASET_ROOT}/experiments/obs1_density_dose_response_qwen_20260724/'
     "reconstruction/reward_dilution_all_750_questions.jsonl"
 )
 OBS2_RECORDS = ROOT / "outputs/diagnostic_obs2_fixed_bin_selection_20260723/question_selection.jsonl"
@@ -41,17 +46,17 @@ INK = "#202124"
 OBS1_CASES = [
     {
         "question_id": "2DQex53EkNGH2cfo3WPuPn",
-        "image": "/path/to/datasets/A-OKVQA/hf_validation_images/000004.jpg",
+        "image": f'{_ANON_DATASET_ROOT}/A-OKVQA/hf_validation_images/000004.jpg',
         "reference_summary": "phone / cell phone / mobile phone",
     },
     {
         "question_id": "MuwkW3j4kYfEZXwWuicLjv",
-        "image": "/path/to/datasets/A-OKVQA/hf_validation_images/000480.jpg",
+        "image": f'{_ANON_DATASET_ROOT}/A-OKVQA/hf_validation_images/000480.jpg',
         "reference_summary": "crust (10/10 annotators)",
     },
     {
         "question_id": "7Wj97TEQc4fnsxvvsbnUXH",
-        "image": "/path/to/datasets/A-OKVQA/hf_validation_images/000125.jpg",
+        "image": f'{_ANON_DATASET_ROOT}/A-OKVQA/hf_validation_images/000125.jpg',
         "reference_summary": "carrot/carrots (9/10 annotators)",
     },
 ]
@@ -61,13 +66,13 @@ OBS2_META = {
         "dataset": "AI2D",
         "question": "Which phase is shown at label E?",
         "options": "A waning gibbous | B full moon | C waxing crescent | D new moon",
-        "image": "/path/to/datasets/ai2d/images_2/image_111.jpg",
+        "image": f'{_ANON_DATASET_ROOT}/ai2d/images_2/image_111.jpg',
     },
     ("mathvista20_hq", "150"): {
         "dataset": "MathVista",
         "question": "WTY is congruent to TWY. Find x.",
         "options": "A 2 | B 4 | C 5 | D 10",
-        "image": "/path/to/datasets/mathvista/data/images/283.jpg",
+        "image": f'{_ANON_DATASET_ROOT}/mathvista/data/images/283.jpg',
     },
 }
 

@@ -17,6 +17,11 @@ keyword score and half by stable SHA-256 order from the remaining cases.
 
 from __future__ import annotations
 
+import os as _anon_os
+_ANON_DATASET_ROOT = _anon_os.environ.get('DATASET_ROOT', '/path/to/datasets')
+_ANON_PROJECT_ROOT = _anon_os.environ.get('PROJECT_ROOT', '/path/to/project')
+
+
 import argparse
 import hashlib
 import json
@@ -54,7 +59,7 @@ DEFAULT_REFERENCE_MANIFEST = (
 )
 
 BASE_MODEL = Path(
-    "/path/to/project/ttrv_runtime/models/"
+    f'{_ANON_PROJECT_ROOT}/ttrv_runtime/models/'
     "OpenGVLab/InternVL3-2B"
 )
 
@@ -90,11 +95,11 @@ class DatasetSpec:
 
 
 EXPERIMENT_ROOT = Path(
-    "/path/to/datasets/experiments/"
+    f'{_ANON_DATASET_ROOT}/experiments/'
     "closed_choice_pass8_ckpt_ttrv_20260709_052643"
 )
 OBS3_CHECKPOINT_ROOT = Path(
-    "/path/to/datasets/experiments/"
+    f'{_ANON_DATASET_ROOT}/experiments/'
     "internvl3_obs3_validation_attention_20260728/merged_checkpoints"
 )
 
@@ -103,8 +108,8 @@ DATASETS = (
         key="MME",
         task="mme_20",
         labels="AB",
-        test_parquet=Path("/path/to/datasets/verl_data/mme_20/test.parquet"),
-        train_parquet=Path("/path/to/datasets/verl_data/mme_20/train.parquet"),
+        test_parquet=Path(f'{_ANON_DATASET_ROOT}/verl_data/mme_20/test.parquet'),
+        train_parquet=Path(f'{_ANON_DATASET_ROOT}/verl_data/mme_20/train.parquet'),
         ours_validation=EXPERIMENT_ROOT
         / "best_ckpt_pass8_mme20/validation_groups.jsonl",
         ttrv_validation=EXPERIMENT_ROOT
@@ -114,13 +119,13 @@ DATASETS = (
         ours_step=20,
         ttrv_step=20,
         ours_checkpoint=Path(
-            "/path/to/datasets/experiments/"
+            f'{_ANON_DATASET_ROOT}/experiments/'
             "internvl3_attention_viz_20260722_140000/merged_checkpoints/"
             "ours_mme20_step20"
         ),
         ttrv_checkpoint=OBS3_CHECKPOINT_ROOT / "ttrv_mme20_step20",
         ours_source_checkpoint=Path(
-            "/path/to/datasets/experiments/"
+            f'{_ANON_DATASET_ROOT}/experiments/'
             "visual_dep_reward_best_ckpt_20260706_141927/"
             "mme_coef002_ori000/checkpoints/global_step_20"
         ),
@@ -131,8 +136,8 @@ DATASETS = (
         key="AI2D",
         task="ai2d_20",
         labels="A-D",
-        test_parquet=Path("/path/to/datasets/verl_data/ai2d_20/test.parquet"),
-        train_parquet=Path("/path/to/datasets/verl_data/ai2d_20/train.parquet"),
+        test_parquet=Path(f'{_ANON_DATASET_ROOT}/verl_data/ai2d_20/test.parquet'),
+        train_parquet=Path(f'{_ANON_DATASET_ROOT}/verl_data/ai2d_20/train.parquet'),
         ours_validation=EXPERIMENT_ROOT
         / "best_ckpt_pass8_ai2d20/validation_groups.jsonl",
         ttrv_validation=EXPERIMENT_ROOT
@@ -146,7 +151,7 @@ DATASETS = (
         ours_checkpoint=OBS3_CHECKPOINT_ROOT / "ours_ai2d20_step20",
         ttrv_checkpoint=OBS3_CHECKPOINT_ROOT / "ttrv_ai2d20_step10",
         ours_source_checkpoint=Path(
-            "/path/to/datasets/experiments/"
+            f'{_ANON_DATASET_ROOT}/experiments/'
             "visual_dep_reward_best_ckpt_20260706_141927/"
             "ai2d_coef003_ori000/checkpoints/global_step_20"
         ),

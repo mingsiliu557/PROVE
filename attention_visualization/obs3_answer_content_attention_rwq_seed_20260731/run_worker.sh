@@ -3,9 +3,9 @@ set -Eeuo pipefail
 
 RUN_ROOT=$1
 RUN_TAG=$2
-REPO_ROOT=/path/to/project/TTRV
+REPO_ROOT=${PROJECT_ROOT:-/path/to/project}/TTRV
 WORKSPACE="$REPO_ROOT/attention_visualization/obs3_answer_content_attention_rwq_seed_20260731"
-PYTHON_BIN=/path/to/project/envs/ttrv/bin/python
+PYTHON_BIN=${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python
 POOL_SOURCE="$WORKSPACE/pool/attention_pool_400.jsonl"
 POOL_SUMMARY_SOURCE="$WORKSPACE/pool/attention_pool_400.summary.json"
 STAGE_ROOT="$RUN_ROOT/stages"

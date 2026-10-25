@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+
+import os as _anon_os
+_ANON_DATASET_ROOT = _anon_os.environ.get('DATASET_ROOT', '/path/to/datasets')
+
 import argparse
 import json
 from pathlib import Path
@@ -11,8 +15,8 @@ def main() -> None:
     parser.add_argument("--dataset-id", default="MM-Hallu/MME")
     parser.add_argument("--split", default="test")
     parser.add_argument("--local-parquet-dir", default=None)
-    parser.add_argument("--output-root", default="/path/to/datasets/MME/images")
-    parser.add_argument("--cache-dir", default="/path/to/datasets/hf_home/datasets")
+    parser.add_argument("--output-root", default=f'{_ANON_DATASET_ROOT}/MME/images')
+    parser.add_argument("--cache-dir", default=f'{_ANON_DATASET_ROOT}/hf_home/datasets')
     parser.add_argument("--summary-path", default=None)
     args = parser.parse_args()
 

@@ -9,6 +9,10 @@ processor to detect formula or processor drift.
 
 from __future__ import annotations
 
+import os as _anon_os
+_ANON_PROJECT_ROOT = _anon_os.environ.get('PROJECT_ROOT', '/path/to/project')
+
+
 import argparse
 import json
 import os
@@ -39,7 +43,7 @@ from verl.utils.tokenizer import hf_processor  # noqa: E402
 
 
 DEFAULT_MODEL = Path(
-    "/path/to/project/ttrv_runtime/models/OpenGVLab/InternVL3-2B"
+    f'{_ANON_PROJECT_ROOT}/ttrv_runtime/models/OpenGVLab/InternVL3-2B'
 )
 
 

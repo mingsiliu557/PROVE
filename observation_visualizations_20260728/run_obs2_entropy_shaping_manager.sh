@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -uo pipefail
 
-ROOT=/path/to/project/TTRV
+ROOT=${PROJECT_ROOT:-/path/to/project}/TTRV
 OUTPUT="$ROOT/observation_visualizations_20260728/obs2_entropy_shaping_replay"
 WORKER="$ROOT/observation_visualizations_20260728/run_obs2_entropy_shaping_replay.sh"
 
