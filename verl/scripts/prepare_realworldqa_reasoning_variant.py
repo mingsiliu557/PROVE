@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+
+import os as _anon_os
+_ANON_DATASET_ROOT = _anon_os.environ.get('DATASET_ROOT', '/path/to/datasets')
+
 import argparse
 import copy
 import json
@@ -73,8 +77,8 @@ def _write_split(rows: list[dict], output_dir: Path, split: str) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Build RealWorldQA-specific kv_short prompt variant.")
-    parser.add_argument("--source-dir", default="/path/to/datasets/verl_data/realworldqa_20")
-    parser.add_argument("--output-root", default="/path/to/datasets/verl_data/realworldqa_20_reasoning_kv_short")
+    parser.add_argument("--source-dir", default=f'{_ANON_DATASET_ROOT}/verl_data/realworldqa_20')
+    parser.add_argument("--output-root", default=f'{_ANON_DATASET_ROOT}/verl_data/realworldqa_20_reasoning_kv_short')
     parser.add_argument("--test-limit", type=int, default=-1)
     parser.add_argument("--train-limit", type=int, default=-1)
     parser.add_argument("--variants", nargs="+", default=["kv_short"], choices=VARIANTS)

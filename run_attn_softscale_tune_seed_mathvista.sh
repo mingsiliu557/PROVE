@@ -2,8 +2,8 @@
 set -Eeuo pipefail
 
 RUN_TAG="$(date +%Y%m%d_%H%M%S)"
-REPO_ROOT="/path/to/project/TTRV"
-EXP_ROOT="/path/to/datasets/experiments/attention_space_papo_tune_seed_mathvista_${RUN_TAG}"
+REPO_ROOT="${PROJECT_ROOT:-/path/to/project}/TTRV"
+EXP_ROOT="${DATASET_ROOT:-/path/to/datasets}/experiments/attention_space_papo_tune_seed_mathvista_${RUN_TAG}"
 QUEUE_ID="${QUEUE_ID:-q-20250901110548-6w2bl}"
 FLAVOR_ID="${FLAVOR_ID:-ml.pni2l.7xlarge}"
 
@@ -34,9 +34,9 @@ run_one() {
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-REPO_ROOT="/path/to/project/TTRV"
+REPO_ROOT="${PROJECT_ROOT:-/path/to/project}/TTRV"
 VERL_DIR="$REPO_ROOT/verl"
-DATA_ROOT="/path/to/datasets"
+DATA_ROOT="${DATASET_ROOT:-/path/to/datasets}"
 EXP_ROOT="__EXP_ROOT__"
 KEY="__KEY__"
 TASK_NAME="__TASK__"
@@ -55,15 +55,15 @@ CLIP_LOW="__CLIP_LOW__"
 CLIP_HIGH="__CLIP_HIGH__"
 ATTN_RATIO="__ATTN_RATIO__"
 ATTN_SCALE="__ATTN_SCALE__"
-RUNTIME_ROOT="/path/to/project/ttrv_runtime"
+RUNTIME_ROOT="${PROJECT_ROOT:-/path/to/project}/ttrv_runtime"
 RUN_TAG="$(basename "$EXP_ROOT")"
 
 mkdir -p "$EXP_ROOT"
 exec > >(tee -a "$EXP_ROOT/worker_${KEY}.log") 2>&1
 cd "$VERL_DIR"
 
-export PATH="/path/to/project/envs/ttrv/bin:$PATH"
-export PYTHON_BIN="/path/to/project/envs/ttrv/bin/python"
+export PATH="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin:$PATH"
+export PYTHON_BIN="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python"
 export CUDA_VISIBLE_DEVICES="0,1"
 export NO_GPU=2
 export DATA_LOCAL_DIR="$DATA_ROOT/verl_data"

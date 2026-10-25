@@ -26,3 +26,5 @@ __pycache__/
 *.md
 !/README.md
 !/AGENTS.md
+!/cluster/README.md
+!/cluster/MEMORY_BUDGET.md

@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+
+import os as _anon_os
+_ANON_DATASET_ROOT = _anon_os.environ.get('DATASET_ROOT', '/path/to/datasets')
+
 import argparse
 import io
 import json
@@ -244,9 +248,9 @@ def main() -> None:
         description="Prepare RealWorldQA data with HF-question aligned images resized to the TTRV 1000x1000 protocol."
     )
     parser.add_argument("--template-dir", default="verl/data/realworldqa_20")
-    parser.add_argument("--output-dir", default="/path/to/datasets/verl_data/realworldqa_20_aligned_1000")
-    parser.add_argument("--image-root", default="/path/to/datasets/realworldqa_aligned_1000/images")
-    parser.add_argument("--cache-dir", default="/path/to/datasets/hf_home")
+    parser.add_argument("--output-dir", default=f'{_ANON_DATASET_ROOT}/verl_data/realworldqa_20_aligned_1000')
+    parser.add_argument("--image-root", default=f'{_ANON_DATASET_ROOT}/realworldqa_aligned_1000/images')
+    parser.add_argument("--cache-dir", default=f'{_ANON_DATASET_ROOT}/hf_home')
     parser.add_argument("--resize-size", type=int, default=1000)
     parser.add_argument("--overwrite-images", action="store_true")
     args = parser.parse_args()

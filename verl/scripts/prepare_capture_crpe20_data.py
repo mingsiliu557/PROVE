@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+
+import os as _anon_os
+_ANON_DATASET_ROOT = _anon_os.environ.get('DATASET_ROOT', '/path/to/datasets')
+
 import argparse
 import json
 import random
@@ -307,16 +311,16 @@ def _prepare_crpe(args: argparse.Namespace) -> dict[str, Any]:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Prepare CAPTURe/CRPE 20-shot data for the current TTRV/verl layout.")
     parser.add_argument("--datasets", nargs="+", default=["capture", "crpe"], choices=["capture", "crpe"])
-    parser.add_argument("--data-root", default="/path/to/datasets")
-    parser.add_argument("--hf-home", default="/path/to/datasets/hf_home")
+    parser.add_argument("--data-root", default=f'{_ANON_DATASET_ROOT}')
+    parser.add_argument("--hf-home", default=f'{_ANON_DATASET_ROOT}/hf_home')
     parser.add_argument("--template-root", default="verl/data")
-    parser.add_argument("--output-root", default="/path/to/datasets/verl_data")
+    parser.add_argument("--output-root", default=f'{_ANON_DATASET_ROOT}/verl_data')
     parser.add_argument("--capture-snapshot", default="")
     parser.add_argument("--crpe-jsonl", default="crpe_relation.jsonl")
     parser.add_argument("--train-size", type=int, default=20)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--max-image-size", type=int, default=1000)
-    parser.add_argument("--summary-path", default="/path/to/datasets/verl_data/capture_crpe20_prepare_summary.json")
+    parser.add_argument("--summary-path", default=f'{_ANON_DATASET_ROOT}/verl_data/capture_crpe20_prepare_summary.json')
     args = parser.parse_args()
 
     results = {}

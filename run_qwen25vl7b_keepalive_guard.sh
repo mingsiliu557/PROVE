@@ -5,8 +5,8 @@ set -u
 # The guard restores one dummy process per GPU only after the controller and
 # every PPO/Ray process have disappeared.
 
-KEEPALIVE_PY="${KEEPALIVE_PY:-/path/to/storage/camflow/bin/python}"
-KEEPALIVE_SCRIPT="${KEEPALIVE_SCRIPT:-/path/to/storage/CamFlow-Pami/CamFlow-Code-main/tools/dummy_keepalive_worker.py}"
+KEEPALIVE_PY="${KEEPALIVE_PY:-${STORAGE_ROOT:-/path/to/storage}/camflow/bin/python}"
+KEEPALIVE_SCRIPT="${KEEPALIVE_SCRIPT:-${STORAGE_ROOT:-/path/to/storage}/CamFlow-Pami/CamFlow-Code-main/tools/dummy_keepalive_worker.py}"
 LOG_ROOT="${LOG_ROOT:-/suanfayingyong/ttrv-datasets/experiments/qwen25vl7b_keepalive_guard}"
 POLL_SECONDS="${POLL_SECONDS:-30}"
 EXPECTED_GPUS=4

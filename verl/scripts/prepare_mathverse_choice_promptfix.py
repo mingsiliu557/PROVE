@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+
+import os as _anon_os
+_ANON_DATASET_ROOT = _anon_os.environ.get('DATASET_ROOT', '/path/to/datasets')
+
 import argparse
 import copy
 import json
@@ -109,8 +113,8 @@ def _write_split(rows: list[dict[str, Any]], output_dir: Path, split: str) -> No
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Create MathVerse prompt copy with dynamic option-letter instruction.")
-    parser.add_argument("--source-dir", default="/path/to/datasets/verl_data/mathverse_20_choice_norm")
-    parser.add_argument("--output-dir", default="/path/to/datasets/verl_data/mathverse_20_choice_norm_promptfix")
+    parser.add_argument("--source-dir", default=f'{_ANON_DATASET_ROOT}/verl_data/mathverse_20_choice_norm')
+    parser.add_argument("--output-dir", default=f'{_ANON_DATASET_ROOT}/verl_data/mathverse_20_choice_norm_promptfix')
     args = parser.parse_args()
 
     source_dir = Path(args.source_dir)

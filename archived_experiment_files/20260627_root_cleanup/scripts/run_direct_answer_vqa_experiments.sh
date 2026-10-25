@@ -3,16 +3,16 @@ set -Eeuo pipefail
 
 ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 VERL_DIR="$ROOT_DIR/verl"
-DATA_ROOT="${DATA_ROOT:-/path/to/datasets}"
-RUNTIME_ROOT="${RUNTIME_ROOT:-/path/to/project/ttrv_runtime}"
+DATA_ROOT="${DATA_ROOT:-${DATASET_ROOT:-/path/to/datasets}}"
+RUNTIME_ROOT="${RUNTIME_ROOT:-${PROJECT_ROOT:-/path/to/project}/ttrv_runtime}"
 RUN_TAG="${RUN_TAG:-direct_answer_vqa_$(date +%Y%m%d_%H%M%S)}"
 DATASETS=(${DATASETS:-visualsimpleqa ocrbench_v1 aokvqa_da_val})
 RUN_KIND="${RUN_KIND:-method}" # method or step0
 
 cd "$VERL_DIR"
 
-export PATH="/path/to/project/envs/ttrv/bin:$PATH"
-export PYTHON_BIN="${PYTHON_BIN:-/path/to/project/envs/ttrv/bin/python}"
+export PATH="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin:$PATH"
+export PYTHON_BIN="${PYTHON_BIN:-${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python}"
 export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0,1}"
 export NO_GPU="${NO_GPU:-2}"
 export DATA_LOCAL_DIR="${DATA_LOCAL_DIR:-$DATA_ROOT/verl_data}"

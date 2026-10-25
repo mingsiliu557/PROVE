@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Minimal Qwen2.5-VL/vLLM image-generation diagnostic."""
 
+import os as _anon_os
+_ANON_DATASET_ROOT = _anon_os.environ.get('DATASET_ROOT', '/path/to/datasets')
+
+
 import os
 
 from qwen_vl_utils import fetch_image
@@ -14,7 +18,7 @@ MODEL = os.environ.get(
 )
 IMAGE = os.environ.get(
     "IMAGE_PATH",
-    "/path/to/datasets/MME/images/code_reasoning/0020.png",
+    f'{_ANON_DATASET_ROOT}/MME/images/code_reasoning/0020.png',
 )
 
 

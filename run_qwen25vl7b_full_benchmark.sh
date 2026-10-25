@@ -5,14 +5,14 @@ set -Eeuo pipefail
 # releases the worker. It temporarily replaces the GPU keepalive processes and
 # restores them on every normal/error exit.
 
-REPO_ROOT="${REPO_ROOT:-/path/to/project/TTRV-qwen25vl7b}"
+REPO_ROOT="${REPO_ROOT:-${PROJECT_ROOT:-/path/to/project}/TTRV-qwen25vl7b}"
 VERL_DIR="$REPO_ROOT/verl"
-PYTHON_BIN="${PYTHON_BIN:-/path/to/project/envs/ttrv/bin/python}"
-RAY_BIN="${RAY_BIN:-/path/to/project/envs/ttrv/bin/ray}"
+PYTHON_BIN="${PYTHON_BIN:-${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python}"
+RAY_BIN="${RAY_BIN:-${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/ray}"
 MODEL_PATH="${MODEL_PATH:-/suanfayingyong/ttrv-datasets/models/Qwen2.5-VL-7B-Instruct}"
 DATA_ROOT="${DATA_ROOT:-/suanfayingyong/ttrv-datasets/verl_data}"
 STORAGE_ROOT="${STORAGE_ROOT:-/suanfayingyong/ttrv-datasets}"
-LEGACY_DATA_ALIAS="${LEGACY_DATA_ALIAS:-/path/to/storage}"
+LEGACY_DATA_ALIAS="${LEGACY_DATA_ALIAS:-${STORAGE_ROOT:-/path/to/storage}}"
 LEGACY_DATA_TARGET="${LEGACY_DATA_TARGET:-/suanfayingyong}"
 RUN_TAG="${RUN_TAG:-$(date +%Y%m%d_%H%M%S)}"
 RUN_ROOT="${RUN_ROOT:-$STORAGE_ROOT/experiments/qwen25vl7b_ttrv_full_${RUN_TAG}}"
@@ -20,8 +20,8 @@ MODE="${MODE:-smoke_then_full}"
 OURS_VAL_BEFORE_TRAIN="${OURS_VAL_BEFORE_TRAIN:-false}"
 SAVE_CHECKPOINTS="${SAVE_CHECKPOINTS:-1}"
 
-KEEPALIVE_PY="${KEEPALIVE_PY:-/path/to/storage/camflow/bin/python}"
-KEEPALIVE_SCRIPT="${KEEPALIVE_SCRIPT:-/path/to/storage/CamFlow-Pami/CamFlow-Code-main/tools/dummy_keepalive_worker.py}"
+KEEPALIVE_PY="${KEEPALIVE_PY:-${STORAGE_ROOT:-/path/to/storage}/camflow/bin/python}"
+KEEPALIVE_SCRIPT="${KEEPALIVE_SCRIPT:-${STORAGE_ROOT:-/path/to/storage}/CamFlow-Pami/CamFlow-Code-main/tools/dummy_keepalive_worker.py}"
 KEEPALIVE_BURST="${KEEPALIVE_BURST:-1.5}"
 KEEPALIVE_IDLE="${KEEPALIVE_IDLE:-3.0}"
 
