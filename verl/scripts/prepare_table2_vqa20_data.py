@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+
+import os as _anon_os
+_ANON_DATASET_ROOT = _anon_os.environ.get('DATASET_ROOT', '/path/to/datasets')
+
 import argparse
 import json
 from pathlib import Path
@@ -106,10 +110,10 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Prepare relocated Table 2 VQA 20-shot JSON/parquet files for TTRV/verl.")
     parser.add_argument("--datasets", nargs="+", default=list(DATASETS), choices=DATASETS)
     parser.add_argument("--template-root", default="verl/data")
-    parser.add_argument("--output-root", default="/path/to/datasets/verl_data")
-    parser.add_argument("--data-root", default="/path/to/datasets")
+    parser.add_argument("--output-root", default=f'{_ANON_DATASET_ROOT}/verl_data')
+    parser.add_argument("--data-root", default=f'{_ANON_DATASET_ROOT}')
     parser.add_argument("--allow-missing-images", action="store_true")
-    parser.add_argument("--summary-path", default="/path/to/datasets/verl_data/table2_vqa20_prepare_summary.json")
+    parser.add_argument("--summary-path", default=f'{_ANON_DATASET_ROOT}/verl_data/table2_vqa20_prepare_summary.json')
     args = parser.parse_args()
 
     output_root = Path(args.output_root)

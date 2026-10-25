@@ -5,15 +5,15 @@ ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 cd "$ROOT_DIR"
 
 RUN_TAG="${RUN_TAG:-capture_crpe_val_smoke_$(date +%Y%m%d_%H%M%S)}"
-OUT_DIR="${OUT_DIR:-/path/to/datasets/experiments/${RUN_TAG}}"
+OUT_DIR="${OUT_DIR:-${DATASET_ROOT:-/path/to/datasets}/experiments/${RUN_TAG}}"
 mkdir -p "$OUT_DIR"
 
 export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-0}"
 export NO_GPU="${NO_GPU:-1}"
-export DATA_LOCAL_DIR="${DATA_LOCAL_DIR:-/path/to/datasets/verl_data}"
-export HF_HOME="${HF_HOME:-/path/to/datasets/hf_home}"
-export BACKBONE_PATH="${BACKBONE_PATH:-/path/to/datasets/models/OpenGVLab/InternVL3-2B}"
-export PYTHON_BIN="${PYTHON_BIN:-/path/to/project/envs/ttrv/bin/python}"
+export DATA_LOCAL_DIR="${DATA_LOCAL_DIR:-${DATASET_ROOT:-/path/to/datasets}/verl_data}"
+export HF_HOME="${HF_HOME:-${DATASET_ROOT:-/path/to/datasets}/hf_home}"
+export BACKBONE_PATH="${BACKBONE_PATH:-${DATASET_ROOT:-/path/to/datasets}/models/OpenGVLab/InternVL3-2B}"
+export PYTHON_BIN="${PYTHON_BIN:-${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python}"
 export VLLM_USE_V1="${VLLM_USE_V1:-0}"
 export HF_HUB_OFFLINE="${HF_HUB_OFFLINE:-1}"
 export TRANSFORMERS_OFFLINE="${TRANSFORMERS_OFFLINE:-1}"
@@ -45,7 +45,7 @@ run_one() {
   local labels="$2"
   local log_file="$OUT_DIR/${task}.log"
   echo "[smoke] task=$task labels=$labels log=$log_file out=$OUT_DIR"
-  TASK="$task" ANSWER_PARSE_MODE=legacy ANSWER_CHOICE_LABELS="$labels"   TTRL_REWARD_STYLE=frequency_entropy ENTROPY_COEF=0.75   TTRL_EVAL_OUTPUT_JSONL="$OUT_DIR/${task}_eval_flat.jsonl"   TTRL_EVAL_GROUP_OUTPUT_JSONL="$OUT_DIR/${task}_eval_groups.jsonl"   LOG_FILE="$log_file"   bash verl/examples/ttrv/run.sh "${COMMON_ARGS[@]}"     trainer.experiment_name="${task}_${RUN_TAG}"     trainer.default_local_dir="/path/to/datasets/checkpoints/smoke/${RUN_TAG}/${task}"
+  TASK="$task" ANSWER_PARSE_MODE=legacy ANSWER_CHOICE_LABELS="$labels"   TTRL_REWARD_STYLE=frequency_entropy ENTROPY_COEF=0.75   TTRL_EVAL_OUTPUT_JSONL="$OUT_DIR/${task}_eval_flat.jsonl"   TTRL_EVAL_GROUP_OUTPUT_JSONL="$OUT_DIR/${task}_eval_groups.jsonl"   LOG_FILE="$log_file"   bash verl/examples/ttrv/run.sh "${COMMON_ARGS[@]}"     trainer.experiment_name="${task}_${RUN_TAG}"     trainer.default_local_dir="${DATASET_ROOT:-/path/to/datasets}/checkpoints/smoke/${RUN_TAG}/${task}"
 }
 
 for smoke_task in ${SMOKE_TASKS:-capture crpe}; do

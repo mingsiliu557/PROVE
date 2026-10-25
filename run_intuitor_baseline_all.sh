@@ -2,9 +2,9 @@
 set -Eeuo pipefail
 
 RUN_TAG="${RUN_TAG:-$(date +%Y%m%d_%H%M%S)}"
-REPO_ROOT="/path/to/project/TTRV-intuitor-baseline"
+REPO_ROOT="${PROJECT_ROOT:-/path/to/project}/TTRV-intuitor-baseline"
 VERL_DIR="$REPO_ROOT/verl"
-DATA_ROOT="/path/to/datasets"
+DATA_ROOT="${DATASET_ROOT:-/path/to/datasets}"
 EXP_ROOT="${EXP_ROOT:-$DATA_ROOT/experiments/intuitor_baseline_$RUN_TAG}"
 QUEUE_ID="${QUEUE_ID:-q-20250901110548-6w2bl}"
 FLAVOR_ID="${FLAVOR_ID:-ml.pni2l.7xlarge}"
@@ -41,10 +41,10 @@ CLIP_HIGH="$7"
 RUN_MODE="$8"
 EXP_ROOT="$9"
 
-REPO_ROOT="/path/to/project/TTRV-intuitor-baseline"
+REPO_ROOT="${PROJECT_ROOT:-/path/to/project}/TTRV-intuitor-baseline"
 VERL_DIR="$REPO_ROOT/verl"
-DATA_ROOT="/path/to/datasets"
-RUNTIME_ROOT="/path/to/project/ttrv_runtime"
+DATA_ROOT="${DATASET_ROOT:-/path/to/datasets}"
+RUNTIME_ROOT="${PROJECT_ROOT:-/path/to/project}/ttrv_runtime"
 RUN_DIR="$EXP_ROOT/$KEY"
 TMP_ROOT="/tmp/it_$$"
 
@@ -63,8 +63,8 @@ on_exit() {
 trap on_exit EXIT
 
 cd "$VERL_DIR"
-export PATH="/path/to/project/envs/ttrv/bin:$PATH"
-export PYTHON_BIN="/path/to/project/envs/ttrv/bin/python"
+export PATH="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin:$PATH"
+export PYTHON_BIN="${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python"
 export PYTHONPATH="$VERL_DIR${PYTHONPATH:+:$PYTHONPATH}"
 export CUDA_VISIBLE_DEVICES=0,1
 export NO_GPU=2
@@ -227,7 +227,7 @@ run_one() {
 run_one "smoke_mme20" "mme_20_papo_smoke2" "legacy" "AB" "0.01" "0.2" "0.3" "smoke"
 
 SMOKE_JSONL="$EXP_ROOT/smoke_mme20/train_rollouts.jsonl"
-SMOKE_JSONL="$SMOKE_JSONL" /path/to/project/envs/ttrv/bin/python - <<'PY'
+SMOKE_JSONL="$SMOKE_JSONL" ${PROJECT_ROOT:-/path/to/project}/envs/ttrv/bin/python - <<'PY'
 import json
 import math
 import os

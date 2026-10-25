@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import os as _anon_os
+_ANON_DATASET_ROOT = _anon_os.environ.get('DATASET_ROOT', '/path/to/datasets')
+
+
 import argparse
 import ast
 import json
@@ -509,14 +513,14 @@ def prepare_aokvqa_da_val(args: argparse.Namespace) -> list[dict[str, Any]]:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Prepare direct-answer VQA datasets for TTRV/verl.")
     parser.add_argument("--datasets", nargs="+", default=list(DATASET_SPECS), choices=list(DATASET_SPECS))
-    parser.add_argument("--data-root", default="/path/to/datasets")
-    parser.add_argument("--output-root", default="/path/to/datasets/verl_data")
-    parser.add_argument("--hf-home", default="/path/to/datasets/hf_home")
+    parser.add_argument("--data-root", default=f'{_ANON_DATASET_ROOT}')
+    parser.add_argument("--output-root", default=f'{_ANON_DATASET_ROOT}/verl_data')
+    parser.add_argument("--hf-home", default=f'{_ANON_DATASET_ROOT}/hf_home')
     parser.add_argument("--proxy", default="127.0.0.1:7892")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--train-size", type=int, default=20)
     parser.add_argument("--pool-size", type=int, default=80)
-    parser.add_argument("--summary-path", default="/path/to/datasets/verl_data/direct_answer_vqa_prepare_summary.json")
+    parser.add_argument("--summary-path", default=f'{_ANON_DATASET_ROOT}/verl_data/direct_answer_vqa_prepare_summary.json')
     parser.add_argument("--visualsimpleqa-repo", default=VISUAL_REPO)
     parser.add_argument("--visualsimpleqa-config", default="VisualSimpleQA")
     parser.add_argument("--visualsimpleqa-split", default="test")

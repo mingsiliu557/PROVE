@@ -6,7 +6,7 @@ This folder records the current experiment/code state before moving machines.
 
 - Git remote: `git@github.com:OWNER/TTRV.git`
 - Target branch: `main`
-- Git user: `OWNER <private-email-removed@example.invalid>`
+- Git user: `Project contributor <private-email-removed@example.invalid>`
 - Main runnable script: `/root/autodl-tmp/TTRV/run.sh`
 - Important code changes are in:
   - `verl/verl/trainer/ppo/ray_trainer.py`

@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+
+import os as _anon_os
+_ANON_DATASET_ROOT = _anon_os.environ.get('DATASET_ROOT', '/path/to/datasets')
+
 import argparse
 import json
 import os
@@ -114,8 +118,8 @@ def _convert_split(split: str, examples: list[dict], image_roots: list[Path], al
 def main() -> None:
     parser = argparse.ArgumentParser(description="Prepare relocated MME20 parquet files for TTRV/verl.")
     parser.add_argument("--source-dir", default="verl/data/mme_20", help="Directory containing train.json and test.json.")
-    parser.add_argument("--output-dir", default="/path/to/datasets/verl_data/mme_20")
-    parser.add_argument("--data-root", default="/path/to/datasets")
+    parser.add_argument("--output-dir", default=f'{_ANON_DATASET_ROOT}/verl_data/mme_20')
+    parser.add_argument("--data-root", default=f'{_ANON_DATASET_ROOT}')
     parser.add_argument("--mme-image-root", default=os.environ.get("MME_IMAGE_ROOT"))
     parser.add_argument("--allow-missing-images", action="store_true")
     parser.add_argument("--train-limit", type=int, default=-1)
