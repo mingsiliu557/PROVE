@@ -1,0 +1,5 @@
+{
+  "VisualSimpleQA": "<image>\n{question}\nAnswer with a short direct answer.",
+  "OCRBench-v1": "<image>\n{question}\nAnswer with the exact text from the image.",
+  "A-OKVQA (Direct Answer, Validation)": "<image>\n{question}\nAnswer with a short direct answer."
+}

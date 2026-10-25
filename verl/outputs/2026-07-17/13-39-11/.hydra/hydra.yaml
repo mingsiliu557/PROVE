@@ -1,0 +1,282 @@
+hydra:
+  run:
+    dir: outputs/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  sweep:
+    dir: multirun/${now:%Y-%m-%d}/${now:%H-%M-%S}
+    subdir: ${hydra.job.num}
+  launcher:
+    _target_: hydra._internal.core_plugins.basic_launcher.BasicLauncher
+  sweeper:
+    _target_: hydra._internal.core_plugins.basic_sweeper.BasicSweeper
+    max_batch_size: null
+    params: null
+  help:
+    app_name: ${hydra.job.name}
+    header: '${hydra.help.app_name} is powered by Hydra.
+
+      '
+    footer: 'Powered by Hydra (https://hydra.cc)
+
+      Use --hydra-help to view Hydra specific help
+
+      '
+    template: '${hydra.help.header}
+
+      == Configuration groups ==
+
+      Compose your configuration from those groups (group=option)
+
+
+      $APP_CONFIG_GROUPS
+
+
+      == Config ==
+
+      Override anything in the config (foo.bar=value)
+
+
+      $CONFIG
+
+
+      ${hydra.help.footer}
+
+      '
+  hydra_help:
+    template: 'Hydra (${hydra.runtime.version})
+
+      See https://hydra.cc for more info.
+
+
+      == Flags ==
+
+      $FLAGS_HELP
+
+
+      == Configuration groups ==
+
+      Compose your configuration from those groups (For example, append hydra/job_logging=disabled
+      to command line)
+
+
+      $HYDRA_CONFIG_GROUPS
+
+
+      Use ''--cfg hydra'' to Show the Hydra config.
+
+      '
+    hydra_help: ???
+  hydra_logging:
+    version: 1
+    formatters:
+      simple:
+        format: '[%(asctime)s][HYDRA] %(message)s'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: simple
+        stream: ext://sys.stdout
+    root:
+      level: INFO
+      handlers:
+      - console
+    loggers:
+      logging_example:
+        level: DEBUG
+    disable_existing_loggers: false
+  job_logging:
+    version: 1
+    formatters:
+      simple:
+        format: '[%(asctime)s][%(name)s][%(levelname)s] - %(message)s'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: simple
+        stream: ext://sys.stdout
+      file:
+        class: logging.FileHandler
+        formatter: simple
+        filename: ${hydra.runtime.output_dir}/${hydra.job.name}.log
+    root:
+      level: INFO
+      handlers:
+      - console
+      - file
+    disable_existing_loggers: false
+  env: {}
+  mode: RUN
+  searchpath: []
+  callbacks: {}
+  output_subdir: .hydra
+  overrides:
+    hydra:
+    - hydra.mode=RUN
+    task:
+    - reward_model.reward_manager=ttrl
+    - +reward_model.val_num_examine=0
+    - reward_model.reward_kwargs.n_samples_per_prompt=16
+    - reward_model.reward_kwargs.n_votes_per_prompt=32
+    - reward_model.reward_kwargs.mode=train
+    - reward_model.reward_kwargs.reward_style=frequency_entropy
+    - reward_model.reward_kwargs.soft_label_gamma=2.0
+    - reward_model.reward_kwargs.unknown_reward=0.0
+    - reward_model.reward_kwargs.all_unknown_reward=0.0
+    - reward_model.reward_kwargs.entropy_coef=0.75
+    - reward_model.reward_kwargs.answer_parse_mode=legacy
+    - reward_model.reward_kwargs.answer_choice_labels=A-D
+    - reward_model.reward_kwargs.harmony_transform_type=photometric
+    - reward_model.reward_kwargs.feature_center_hsr_alpha=0.5
+    - reward_model.reward_kwargs.feature_center_hsr_beta=0.2
+    - reward_model.reward_kwargs.entropy_temperature_version=v3
+    - reward_model.reward_kwargs.entropy_temperature_tau0=0.25
+    - reward_model.reward_kwargs.entropy_temperature_gamma=1.0
+    - reward_model.reward_kwargs.entropy_temperature_lambda=0.5
+    - reward_model.reward_kwargs.entropy_temperature_tau_min=0.05
+    - +reward_model.reward_kwargs.density_temperature_t0=0.2
+    - +reward_model.reward_kwargs.density_temperature_t_min=0.05
+    - +reward_model.reward_kwargs.density_temperature_t_max=0.8
+    - +reward_model.reward_kwargs.density_embedding_scope=response_mean_pool
+    - +reward_model.reward_kwargs.density_evidence_template=
+    - +reward_model.reward_kwargs.numeric_kernel_sigma=0.15
+    - +reward_model.reward_kwargs.numeric_trim_ratio=0.2
+    - data.train_files=[/path/to/datasets/verl_data/seed_20/train.parquet]
+    - data.val_files=[/path/to/datasets/verl_data/seed_20/test.parquet]
+    - data.max_prompt_length=7524
+    - data.max_response_length=1024
+    - data.train_batch_size=2
+    - data.return_full_prompt=false
+    - data.papo_mask_patch_size=14
+    - data.papo_mask_prob=0.6
+    - +data.papo_mask_type=black
+    - data.papo_cf_mode=pixel
+    - data.papo_attn_cf_ratio=0.6
+    - data.papo_attn_cf_cut_iv=false
+    - data.papo_attn_cf_style=hard_cut
+    - data.papo_attn_cf_scale=0.3
+    - data.filter_overlong_prompts=True
+    - data.truncation=error
+    - actor_rollout_ref.model.path=/path/to/project/ttrv_runtime/models/OpenGVLab/InternVL3-2B
+    - actor_rollout_ref.model.enable_gradient_checkpointing=True
+    - actor_rollout_ref.model.use_remove_padding=True
+    - actor_rollout_ref.actor.ppo_mini_batch_size=1
+    - actor_rollout_ref.actor.ppo_micro_batch_size_per_gpu=2
+    - actor_rollout_ref.actor.use_kl_loss=True
+    - actor_rollout_ref.actor.kl_loss_coef=0.01
+    - actor_rollout_ref.actor.clip_ratio_low=0.2
+    - actor_rollout_ref.actor.clip_ratio_high=0.3
+    - actor_rollout_ref.actor.use_papo_prcp_loss=false
+    - actor_rollout_ref.actor.papo_valid_only=false
+    - actor_rollout_ref.actor.papo_kl_prcp_coef=0.0
+    - actor_rollout_ref.actor.papo_kl_prcp_clip=0.2
+    - actor_rollout_ref.actor.papo_ori_entropy_coef=0.0
+    - actor_rollout_ref.actor.optim.lr=5e-7
+    - actor_rollout_ref.actor.optim.lr_warmup_steps_ratio=0.03
+    - actor_rollout_ref.actor.optim.warmup_style=cosine
+    - actor_rollout_ref.actor.fsdp_config.param_offload=False
+    - actor_rollout_ref.actor.fsdp_config.optimizer_offload=False
+    - actor_rollout_ref.actor.ppo_max_token_len_per_gpu=8548
+    - actor_rollout_ref.ref.log_prob_micro_batch_size_per_gpu=2
+    - actor_rollout_ref.ref.fsdp_config.param_offload=True
+    - actor_rollout_ref.rollout.name=vllm
+    - actor_rollout_ref.rollout.temperature=1.0
+    - actor_rollout_ref.rollout.enforce_eager=False
+    - actor_rollout_ref.rollout.free_cache_engine=False
+    - actor_rollout_ref.rollout.log_prob_micro_batch_size_per_gpu=2
+    - actor_rollout_ref.rollout.tensor_model_parallel_size=1
+    - actor_rollout_ref.rollout.gpu_memory_utilization=0.65
+    - actor_rollout_ref.rollout.do_vote=True
+    - actor_rollout_ref.rollout.n_vote=32
+    - actor_rollout_ref.rollout.n=16
+    - actor_rollout_ref.rollout.val_kwargs.do_sample=False
+    - actor_rollout_ref.rollout.val_kwargs.n=1
+    - actor_rollout_ref.rollout.val_kwargs.top_p=0.95
+    - actor_rollout_ref.rollout.val_kwargs.temperature=0.0
+    - actor_rollout_ref.rollout.max_model_len=8548
+    - actor_rollout_ref.rollout.max_num_batched_tokens=8548
+    - actor_rollout_ref.rollout.enable_chunked_prefill=False
+    - +actor_rollout_ref.rollout.limit_images=1
+    - critic.optim.lr=9e-6
+    - critic.model.use_remove_padding=True
+    - critic.model.path=/path/to/project/ttrv_runtime/models/OpenGVLab/InternVL3-2B
+    - critic.model.enable_gradient_checkpointing=True
+    - critic.ppo_micro_batch_size_per_gpu=2
+    - critic.model.fsdp_config.param_offload=False
+    - critic.model.fsdp_config.optimizer_offload=False
+    - algorithm.kl_ctrl.kl_coef=0.00
+    - algorithm.use_visual_dep_reward=false
+    - algorithm.visual_dep_coef=0.0
+    - algorithm.visual_dep_raw_clip=20.0
+    - algorithm.visual_dep_z_clip=3.0
+    - algorithm.visual_dep_valid_answer_only=false
+    - algorithm.adv_estimator=grpo
+    - trainer.logger=[console]
+    - trainer.project_name=TTRL-verl
+    - trainer.experiment_name=0717-TTRL-Len@3k-seed_20-_project_root_ttrv_runtime_models_OpenGVLab_InternVL3-2B-grpo
+    - trainer.n_gpus_per_node=2
+    - trainer.nnodes=1
+    - trainer.save_freq=20000000
+    - trainer.test_freq=200000
+    - trainer.max_actor_ckpt_to_keep=0
+    - trainer.max_critic_ckpt_to_keep=0
+    - trainer.default_local_dir=checkpoints/TTRL-verl/seed_20-_project_root_ttrv_runtime_models_OpenGVLab_InternVL3-2B/0717/TTRL-Len@3k-grpo-133903
+    - trainer.total_epochs=0
+    - data.train_files=[/path/to/datasets/verl_data/seed_20/train.parquet]
+    - data.val_files=[/path/to/datasets/experiments/diagnostic_stage_a_20260717_115200/prepared/seed20/shuffle_blank.parquet]
+    - trainer.val_before_train=True
+    - +trainer.val_only=True
+    - trainer.test_freq=0
+    - trainer.total_epochs=0
+    - trainer.save_freq=0
+    - trainer.max_actor_ckpt_to_keep=0
+    - trainer.max_critic_ckpt_to_keep=0
+    - trainer.experiment_name=diagnostic_stage_a_seed20_counterfactual
+    - trainer.default_local_dir=/path/to/datasets/experiments/diagnostic_stage_a_20260717_115200/runs/seed20/counterfactual/checkpoints_disabled
+    - actor_rollout_ref.rollout.temperature=1.0
+    - actor_rollout_ref.rollout.top_p=1.0
+    - actor_rollout_ref.rollout.top_k=-1
+    - +actor_rollout_ref.rollout.seed=0
+    - actor_rollout_ref.rollout.val_kwargs.do_sample=False
+    - actor_rollout_ref.rollout.val_kwargs.n=1
+    - actor_rollout_ref.rollout.val_kwargs.temperature=0.0
+    - actor_rollout_ref.rollout.val_kwargs.top_p=1.0
+    - actor_rollout_ref.rollout.val_kwargs.top_k=-1
+  job:
+    name: main_ppo
+    chdir: null
+    override_dirname: +actor_rollout_ref.rollout.limit_images=1,+actor_rollout_ref.rollout.seed=0,+data.papo_mask_type=black,+reward_model.reward_kwargs.density_embedding_scope=response_mean_pool,+reward_model.reward_kwargs.density_evidence_template=,+reward_model.reward_kwargs.density_temperature_t0=0.2,+reward_model.reward_kwargs.density_temperature_t_max=0.8,+reward_model.reward_kwargs.density_temperature_t_min=0.05,+reward_model.reward_kwargs.numeric_kernel_sigma=0.15,+reward_model.reward_kwargs.numeric_trim_ratio=0.2,+reward_model.val_num_examine=0,+trainer.val_only=True,actor_rollout_ref.actor.clip_ratio_high=0.3,actor_rollout_ref.actor.clip_ratio_low=0.2,actor_rollout_ref.actor.fsdp_config.optimizer_offload=False,actor_rollout_ref.actor.fsdp_config.param_offload=False,actor_rollout_ref.actor.kl_loss_coef=0.01,actor_rollout_ref.actor.optim.lr=5e-7,actor_rollout_ref.actor.optim.lr_warmup_steps_ratio=0.03,actor_rollout_ref.actor.optim.warmup_style=cosine,actor_rollout_ref.actor.papo_kl_prcp_clip=0.2,actor_rollout_ref.actor.papo_kl_prcp_coef=0.0,actor_rollout_ref.actor.papo_ori_entropy_coef=0.0,actor_rollout_ref.actor.papo_valid_only=false,actor_rollout_ref.actor.ppo_max_token_len_per_gpu=8548,actor_rollout_ref.actor.ppo_micro_batch_size_per_gpu=2,actor_rollout_ref.actor.ppo_mini_batch_size=1,actor_rollout_ref.actor.use_kl_loss=True,actor_rollout_ref.actor.use_papo_prcp_loss=false,actor_rollout_ref.model.enable_gradient_checkpointing=True,actor_rollout_ref.model.path=/path/to/project/ttrv_runtime/models/OpenGVLab/InternVL3-2B,actor_rollout_ref.model.use_remove_padding=True,actor_rollout_ref.ref.fsdp_config.param_offload=True,actor_rollout_ref.ref.log_prob_micro_batch_size_per_gpu=2,actor_rollout_ref.rollout.do_vote=True,actor_rollout_ref.rollout.enable_chunked_prefill=False,actor_rollout_ref.rollout.enforce_eager=False,actor_rollout_ref.rollout.free_cache_engine=False,actor_rollout_ref.rollout.gpu_memory_utilization=0.65,actor_rollout_ref.rollout.log_prob_micro_batch_size_per_gpu=2,actor_rollout_ref.rollout.max_model_len=8548,actor_rollout_ref.rollout.max_num_batched_tokens=8548,actor_rollout_ref.rollout.n=16,actor_rollout_ref.rollout.n_vote=32,actor_rollout_ref.rollout.name=vllm,actor_rollout_ref.rollout.temperature=1.0,actor_rollout_ref.rollout.temperature=1.0,actor_rollout_ref.rollout.tensor_model_parallel_size=1,actor_rollout_ref.rollout.top_k=-1,actor_rollout_ref.rollout.top_p=1.0,actor_rollout_ref.rollout.val_kwargs.do_sample=False,actor_rollout_ref.rollout.val_kwargs.do_sample=False,actor_rollout_ref.rollout.val_kwargs.n=1,actor_rollout_ref.rollout.val_kwargs.n=1,actor_rollout_ref.rollout.val_kwargs.temperature=0.0,actor_rollout_ref.rollout.val_kwargs.temperature=0.0,actor_rollout_ref.rollout.val_kwargs.top_k=-1,actor_rollout_ref.rollout.val_kwargs.top_p=0.95,actor_rollout_ref.rollout.val_kwargs.top_p=1.0,algorithm.adv_estimator=grpo,algorithm.kl_ctrl.kl_coef=0.00,algorithm.use_visual_dep_reward=false,algorithm.visual_dep_coef=0.0,algorithm.visual_dep_raw_clip=20.0,algorithm.visual_dep_valid_answer_only=false,algorithm.visual_dep_z_clip=3.0,critic.model.enable_gradient_checkpointing=True,critic.model.fsdp_config.optimizer_offload=False,critic.model.fsdp_config.param_offload=False,critic.model.path=/path/to/project/ttrv_runtime/models/OpenGVLab/InternVL3-2B,critic.model.use_remove_padding=True,critic.optim.lr=9e-6,critic.ppo_micro_batch_size_per_gpu=2,data.filter_overlong_prompts=True,data.max_prompt_length=7524,data.max_response_length=1024,data.papo_attn_cf_cut_iv=false,data.papo_attn_cf_ratio=0.6,data.papo_attn_cf_scale=0.3,data.papo_attn_cf_style=hard_cut,data.papo_cf_mode=pixel,data.papo_mask_patch_size=14,data.papo_mask_prob=0.6,data.return_full_prompt=false,data.train_batch_size=2,data.train_files=[/path/to/datasets/verl_data/seed_20/train.parquet],data.train_files=[/path/to/datasets/verl_data/seed_20/train.parquet],data.truncation=error,data.val_files=[/path/to/datasets/experiments/diagnostic_stage_a_20260717_115200/prepared/seed20/shuffle_blank.parquet],data.val_files=[/path/to/datasets/verl_data/seed_20/test.parquet],reward_model.reward_kwargs.all_unknown_reward=0.0,reward_model.reward_kwargs.answer_choice_labels=A-D,reward_model.reward_kwargs.answer_parse_mode=legacy,reward_model.reward_kwargs.entropy_coef=0.75,reward_model.reward_kwargs.entropy_temperature_gamma=1.0,reward_model.reward_kwargs.entropy_temperature_lambda=0.5,reward_model.reward_kwargs.entropy_temperature_tau0=0.25,reward_model.reward_kwargs.entropy_temperature_tau_min=0.05,reward_model.reward_kwargs.entropy_temperature_version=v3,reward_model.reward_kwargs.feature_center_hsr_alpha=0.5,reward_model.reward_kwargs.feature_center_hsr_beta=0.2,reward_model.reward_kwargs.harmony_transform_type=photometric,reward_model.reward_kwargs.mode=train,reward_model.reward_kwargs.n_samples_per_prompt=16,reward_model.reward_kwargs.n_votes_per_prompt=32,reward_model.reward_kwargs.reward_style=frequency_entropy,reward_model.reward_kwargs.soft_label_gamma=2.0,reward_model.reward_kwargs.unknown_reward=0.0,reward_model.reward_manager=ttrl,trainer.default_local_dir=/path/to/datasets/experiments/diagnostic_stage_a_20260717_115200/runs/seed20/counterfactual/checkpoints_disabled,trainer.default_local_dir=checkpoints/TTRL-verl/seed_20-_project_root_ttrv_runtime_models_OpenGVLab_InternVL3-2B/0717/TTRL-Len@3k-grpo-133903,trainer.experiment_name=0717-TTRL-Len@3k-seed_20-_project_root_ttrv_runtime_models_OpenGVLab_InternVL3-2B-grpo,trainer.experiment_name=diagnostic_stage_a_seed20_counterfactual,trainer.logger=[console],trainer.max_actor_ckpt_to_keep=0,trainer.max_actor_ckpt_to_keep=0,trainer.max_critic_ckpt_to_keep=0,trainer.max_critic_ckpt_to_keep=0,trainer.n_gpus_per_node=2,trainer.nnodes=1,trainer.project_name=TTRL-verl,trainer.save_freq=0,trainer.save_freq=20000000,trainer.test_freq=0,trainer.test_freq=200000,trainer.total_epochs=0,trainer.total_epochs=0,trainer.val_before_train=True
+    id: ???
+    num: ???
+    config_name: ppo_trainer
+    env_set: {}
+    env_copy: []
+    config:
+      override_dirname:
+        kv_sep: '='
+        item_sep: ','
+        exclude_keys: []
+  runtime:
+    version: 1.3.2
+    version_base: '1.3'
+    cwd: /path/to/project/TTRV/verl
+    config_sources:
+    - path: hydra.conf
+      schema: pkg
+      provider: hydra
+    - path: /path/to/project/TTRV/verl/verl/trainer/config
+      schema: file
+      provider: main
+    - path: ''
+      schema: structured
+      provider: schema
+    output_dir: /path/to/project/TTRV/verl/outputs/2026-07-17/13-39-11
+    choices:
+      hydra/env: default
+      hydra/callbacks: null
+      hydra/job_logging: default
+      hydra/hydra_logging: default
+      hydra/hydra_help: default
+      hydra/help: default
+      hydra/sweeper: basic
+      hydra/launcher: basic
+      hydra/output: default
+  verbose: false

@@ -1,0 +1,267 @@
+data:
+  tokenizer: null
+  train_files:
+  - /path/to/datasets/verl_data/ocrbench_v1_20_hq_major_correct/train.parquet
+  val_files:
+  - /path/to/datasets/experiments/diagnostic_stage_a_20260717_115200/prepared/ocrbench_v1/real.parquet
+  prompt_key: prompt
+  reward_fn_key: data_source
+  max_prompt_length: 7524
+  max_response_length: 1024
+  train_batch_size: 2
+  val_batch_size: null
+  return_raw_input_ids: false
+  return_raw_chat: false
+  return_full_prompt: false
+  papo_mask_patch_size: 14
+  papo_mask_prob: 0.6
+  papo_cf_mode: pixel
+  papo_attn_cf_ratio: 0.6
+  papo_attn_cf_cut_iv: false
+  papo_attn_cf_style: hard_cut
+  papo_attn_cf_scale: 0.3
+  shuffle: true
+  filter_overlong_prompts: true
+  filter_overlong_prompts_workers: 1
+  truncation: error
+  image_key: images
+  video_key: videos
+  suffix_prompt: null
+  custom_cls:
+    path: null
+    name: null
+  papo_mask_type: black
+actor_rollout_ref:
+  hybrid_engine: true
+  model:
+    path: /path/to/project/ttrv_runtime/models/OpenGVLab/InternVL3-2B
+    external_lib: null
+    override_config: {}
+    enable_gradient_checkpointing: true
+    use_remove_padding: true
+    use_liger: false
+  actor:
+    strategy: fsdp
+    ppo_mini_batch_size: 1
+    ppo_micro_batch_size: null
+    ppo_micro_batch_size_per_gpu: 2
+    use_dynamic_bsz: false
+    ppo_max_token_len_per_gpu: 8548
+    grad_clip: 1.0
+    clip_ratio: 0.2
+    clip_ratio_low: 0.2
+    clip_ratio_high: 0.3
+    clip_ratio_c: 3.0
+    loss_agg_mode: token-mean
+    entropy_coeff: 0
+    use_papo_prcp_loss: false
+    papo_valid_only: false
+    papo_kl_prcp_coef: 0.0
+    papo_kl_prcp_clip: 0.2
+    papo_ori_entropy_coef: 0.0
+    use_kl_loss: true
+    use_torch_compile: true
+    kl_loss_coef: 0.01
+    kl_loss_type: low_var_kl
+    ppo_epochs: 1
+    shuffle: false
+    ulysses_sequence_parallel_size: 1
+    checkpoint:
+      contents:
+      - model
+      - optimizer
+      - extra
+    optim:
+      lr: 5.0e-07
+      lr_warmup_steps: -1
+      lr_warmup_steps_ratio: 0.03
+      min_lr_ratio: null
+      warmup_style: cosine
+      total_training_steps: -1
+      weight_decay: 0.01
+    fsdp_config:
+      wrap_policy:
+        min_num_params: 0
+      param_offload: false
+      optimizer_offload: false
+      fsdp_size: -1
+  ref:
+    strategy: fsdp
+    fsdp_config:
+      param_offload: true
+      wrap_policy:
+        min_num_params: 0
+    log_prob_micro_batch_size: null
+    log_prob_micro_batch_size_per_gpu: 2
+    log_prob_use_dynamic_bsz: ${actor_rollout_ref.actor.use_dynamic_bsz}
+    log_prob_max_token_len_per_gpu: ${actor_rollout_ref.actor.ppo_max_token_len_per_gpu}
+    ulysses_sequence_parallel_size: ${actor_rollout_ref.actor.ulysses_sequence_parallel_size}
+  rollout:
+    name: vllm
+    temperature: 1.0
+    top_k: -1
+    top_p: 1.0
+    use_fire_sampling: false
+    prompt_length: ${data.max_prompt_length}
+    response_length: ${data.max_response_length}
+    dtype: bfloat16
+    gpu_memory_utilization: 0.65
+    ignore_eos: false
+    enforce_eager: false
+    free_cache_engine: false
+    load_format: dummy_dtensor
+    tensor_model_parallel_size: 1
+    max_num_batched_tokens: 8548
+    max_model_len: 8548
+    max_num_seqs: 1024
+    log_prob_micro_batch_size: null
+    log_prob_micro_batch_size_per_gpu: 2
+    log_prob_use_dynamic_bsz: ${actor_rollout_ref.actor.use_dynamic_bsz}
+    log_prob_max_token_len_per_gpu: ${actor_rollout_ref.actor.ppo_max_token_len_per_gpu}
+    disable_log_stats: true
+    enable_chunked_prefill: false
+    do_sample: true
+    do_vote: true
+    'n': 16
+    n_vote: 32
+    engine_kwargs:
+      swap_space: null
+    val_kwargs:
+      top_k: -1
+      top_p: 1.0
+      temperature: 1.0
+      'n': 32
+      do_sample: true
+    limit_images: 1
+    seed: 0
+critic:
+  rollout_n: ${actor_rollout_ref.rollout.n}
+  strategy: fsdp
+  optim:
+    lr: 9.0e-06
+    lr_warmup_steps_ratio: 0.0
+    min_lr_ratio: null
+    warmup_style: constant
+    total_training_steps: -1
+    weight_decay: 0.01
+  model:
+    path: /path/to/project/ttrv_runtime/models/OpenGVLab/InternVL3-2B
+    tokenizer_path: ${actor_rollout_ref.model.path}
+    override_config: {}
+    external_lib: ${actor_rollout_ref.model.external_lib}
+    enable_gradient_checkpointing: true
+    use_remove_padding: true
+    fsdp_config:
+      param_offload: false
+      optimizer_offload: false
+      wrap_policy:
+        min_num_params: 0
+      fsdp_size: -1
+  ppo_mini_batch_size: ${actor_rollout_ref.actor.ppo_mini_batch_size}
+  ppo_micro_batch_size: null
+  ppo_micro_batch_size_per_gpu: 2
+  forward_micro_batch_size: ${critic.ppo_micro_batch_size}
+  forward_micro_batch_size_per_gpu: ${critic.ppo_micro_batch_size_per_gpu}
+  use_dynamic_bsz: ${actor_rollout_ref.actor.use_dynamic_bsz}
+  ppo_max_token_len_per_gpu: 32768
+  forward_max_token_len_per_gpu: ${critic.ppo_max_token_len_per_gpu}
+  ulysses_sequence_parallel_size: 1
+  ppo_epochs: ${actor_rollout_ref.actor.ppo_epochs}
+  shuffle: ${actor_rollout_ref.actor.shuffle}
+  grad_clip: 1.0
+  cliprange_value: 0.5
+  checkpoint:
+    contents:
+    - model
+    - optimizer
+    - extra
+reward_model:
+  enable: false
+  strategy: fsdp
+  model:
+    input_tokenizer: ${actor_rollout_ref.model.path}
+    path: ~/models/FsfairX-LLaMA3-RM-v0.1
+    external_lib: ${actor_rollout_ref.model.external_lib}
+    use_remove_padding: false
+    fsdp_config:
+      wrap_policy:
+        min_num_params: 0
+      param_offload: false
+      fsdp_size: -1
+  micro_batch_size: null
+  micro_batch_size_per_gpu: null
+  max_length: null
+  ulysses_sequence_parallel_size: 1
+  use_dynamic_bsz: ${critic.use_dynamic_bsz}
+  forward_max_token_len_per_gpu: ${critic.forward_max_token_len_per_gpu}
+  reward_manager: ttrl
+  reward_kwargs:
+    n_samples_per_prompt: 16
+    n_votes_per_prompt: 32
+    mode: train
+    reward_style: frequency_entropy
+    soft_label_gamma: 2.0
+    unknown_reward: 0.0
+    all_unknown_reward: 0.0
+    entropy_coef: 0.75
+    answer_parse_mode: direct_answer_short
+    harmony_transform_type: photometric
+    feature_center_hsr_alpha: 0.5
+    feature_center_hsr_beta: 0.2
+    entropy_temperature_version: v3
+    entropy_temperature_tau0: 0.25
+    entropy_temperature_gamma: 1.0
+    entropy_temperature_lambda: 0.5
+    entropy_temperature_tau_min: 0.05
+    answer_choice_labels: A-D
+    density_temperature_t0: 0.2
+    density_temperature_t_min: 0.05
+    density_temperature_t_max: 0.8
+    density_embedding_scope: response_mean_pool
+    density_evidence_template: ''
+    numeric_kernel_sigma: 0.15
+    numeric_trim_ratio: 0.2
+  val_num_examine: 0
+custom_reward_function:
+  path: null
+  name: compute_score
+algorithm:
+  gamma: 1.0
+  lam: 1.0
+  adv_estimator: grpo
+  use_kl_in_reward: false
+  use_visual_dep_reward: false
+  visual_dep_coef: 0.0
+  visual_dep_raw_clip: 20.0
+  visual_dep_z_clip: 3.0
+  visual_dep_valid_answer_only: false
+  kl_penalty: kl
+  kl_ctrl:
+    type: fixed
+    kl_coef: 0.0
+    horizon: 10000
+    target_kl: 0.1
+trainer:
+  balance_batch: true
+  total_epochs: 0
+  total_training_steps: null
+  project_name: TTRL-verl
+  experiment_name: diagnostic_stage_a_ocrbench_v1_real
+  logger:
+  - console
+  log_val_generations: 0
+  nnodes: 1
+  n_gpus_per_node: 2
+  save_freq: 0
+  resume_mode: auto
+  resume_from_path: null
+  val_before_train: true
+  test_freq: 0
+  critic_warmup: 0
+  default_hdfs_dir: null
+  del_local_ckpt_after_load: false
+  default_local_dir: /path/to/datasets/experiments/diagnostic_stage_a_20260718_043946/runs/ocrbench_v1/real/checkpoints_disabled
+  max_actor_ckpt_to_keep: 0
+  max_critic_ckpt_to_keep: 0
+  ray_wait_register_center_timeout: 300
+  val_only: true

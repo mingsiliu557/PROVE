@@ -1,0 +1,246 @@
+hydra:
+  run:
+    dir: outputs/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  sweep:
+    dir: multirun/${now:%Y-%m-%d}/${now:%H-%M-%S}
+    subdir: ${hydra.job.num}
+  launcher:
+    _target_: hydra._internal.core_plugins.basic_launcher.BasicLauncher
+  sweeper:
+    _target_: hydra._internal.core_plugins.basic_sweeper.BasicSweeper
+    max_batch_size: null
+    params: null
+  help:
+    app_name: ${hydra.job.name}
+    header: '${hydra.help.app_name} is powered by Hydra.
+
+      '
+    footer: 'Powered by Hydra (https://hydra.cc)
+
+      Use --hydra-help to view Hydra specific help
+
+      '
+    template: '${hydra.help.header}
+
+      == Configuration groups ==
+
+      Compose your configuration from those groups (group=option)
+
+
+      $APP_CONFIG_GROUPS
+
+
+      == Config ==
+
+      Override anything in the config (foo.bar=value)
+
+
+      $CONFIG
+
+
+      ${hydra.help.footer}
+
+      '
+  hydra_help:
+    template: 'Hydra (${hydra.runtime.version})
+
+      See https://hydra.cc for more info.
+
+
+      == Flags ==
+
+      $FLAGS_HELP
+
+
+      == Configuration groups ==
+
+      Compose your configuration from those groups (For example, append hydra/job_logging=disabled
+      to command line)
+
+
+      $HYDRA_CONFIG_GROUPS
+
+
+      Use ''--cfg hydra'' to Show the Hydra config.
+
+      '
+    hydra_help: ???
+  hydra_logging:
+    version: 1
+    formatters:
+      simple:
+        format: '[%(asctime)s][HYDRA] %(message)s'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: simple
+        stream: ext://sys.stdout
+    root:
+      level: INFO
+      handlers:
+      - console
+    loggers:
+      logging_example:
+        level: DEBUG
+    disable_existing_loggers: false
+  job_logging:
+    version: 1
+    formatters:
+      simple:
+        format: '[%(asctime)s][%(name)s][%(levelname)s] - %(message)s'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: simple
+        stream: ext://sys.stdout
+      file:
+        class: logging.FileHandler
+        formatter: simple
+        filename: ${hydra.runtime.output_dir}/${hydra.job.name}.log
+    root:
+      level: INFO
+      handlers:
+      - console
+      - file
+    disable_existing_loggers: false
+  env: {}
+  mode: RUN
+  searchpath: []
+  callbacks: {}
+  output_subdir: .hydra
+  overrides:
+    hydra:
+    - hydra.mode=RUN
+    task:
+    - reward_model.reward_manager=ttrl
+    - reward_model.reward_kwargs.n_samples_per_prompt=16
+    - reward_model.reward_kwargs.n_votes_per_prompt=32
+    - reward_model.reward_kwargs.mode=train
+    - reward_model.reward_kwargs.reward_style=frequency_valid_only
+    - reward_model.reward_kwargs.soft_label_gamma=2.0
+    - reward_model.reward_kwargs.unknown_reward=0.0
+    - reward_model.reward_kwargs.all_unknown_reward=0.0
+    - reward_model.reward_kwargs.entropy_coef=0.0
+    - reward_model.reward_kwargs.answer_parse_mode=legacy
+    - reward_model.reward_kwargs.answer_choice_labels=AB
+    - reward_model.reward_kwargs.harmony_transform_type=photometric_weak
+    - reward_model.reward_kwargs.feature_center_hsr_alpha=0.5
+    - reward_model.reward_kwargs.feature_center_hsr_beta=0.2
+    - reward_model.reward_kwargs.entropy_temperature_version=v3
+    - reward_model.reward_kwargs.entropy_temperature_tau0=0.25
+    - reward_model.reward_kwargs.entropy_temperature_gamma=1.0
+    - reward_model.reward_kwargs.entropy_temperature_lambda=0.5
+    - reward_model.reward_kwargs.entropy_temperature_tau_min=0.05
+    - +reward_model.reward_kwargs.density_temperature_t0=0.2
+    - +reward_model.reward_kwargs.density_temperature_t_min=0.05
+    - +reward_model.reward_kwargs.density_temperature_t_max=0.8
+    - data.train_files=[/path/to/datasets/verl_data/mme_20_smoke/train.parquet]
+    - data.val_files=[/path/to/datasets/verl_data/mme_20_smoke/test.parquet]
+    - data.max_prompt_length=7524
+    - data.max_response_length=1024
+    - data.train_batch_size=2
+    - data.filter_overlong_prompts=True
+    - data.truncation=error
+    - actor_rollout_ref.model.path=/path/to/datasets/models/OpenGVLab/InternVL3-2B
+    - actor_rollout_ref.model.enable_gradient_checkpointing=True
+    - actor_rollout_ref.model.use_remove_padding=True
+    - actor_rollout_ref.actor.ppo_mini_batch_size=1
+    - actor_rollout_ref.actor.ppo_micro_batch_size_per_gpu=2
+    - actor_rollout_ref.actor.use_kl_loss=True
+    - actor_rollout_ref.actor.optim.lr=5e-7
+    - actor_rollout_ref.actor.optim.lr_warmup_steps_ratio=0.03
+    - actor_rollout_ref.actor.optim.warmup_style=cosine
+    - actor_rollout_ref.actor.fsdp_config.param_offload=False
+    - actor_rollout_ref.actor.fsdp_config.optimizer_offload=False
+    - actor_rollout_ref.actor.ppo_max_token_len_per_gpu=8548
+    - actor_rollout_ref.ref.log_prob_micro_batch_size_per_gpu=2
+    - actor_rollout_ref.ref.fsdp_config.param_offload=True
+    - actor_rollout_ref.rollout.name=vllm
+    - actor_rollout_ref.rollout.temperature=1.0
+    - actor_rollout_ref.rollout.enforce_eager=False
+    - actor_rollout_ref.rollout.free_cache_engine=False
+    - actor_rollout_ref.rollout.log_prob_micro_batch_size_per_gpu=2
+    - actor_rollout_ref.rollout.tensor_model_parallel_size=1
+    - actor_rollout_ref.rollout.gpu_memory_utilization=0.65
+    - actor_rollout_ref.rollout.do_vote=True
+    - actor_rollout_ref.rollout.n_vote=32
+    - actor_rollout_ref.rollout.n=16
+    - actor_rollout_ref.rollout.val_kwargs.do_sample=False
+    - actor_rollout_ref.rollout.val_kwargs.n=1
+    - actor_rollout_ref.rollout.val_kwargs.top_p=0.95
+    - actor_rollout_ref.rollout.val_kwargs.temperature=0.0
+    - actor_rollout_ref.rollout.max_model_len=8548
+    - actor_rollout_ref.rollout.max_num_batched_tokens=8548
+    - critic.optim.lr=9e-6
+    - critic.model.use_remove_padding=True
+    - critic.model.path=/path/to/datasets/models/OpenGVLab/InternVL3-2B
+    - critic.model.enable_gradient_checkpointing=True
+    - critic.ppo_micro_batch_size_per_gpu=2
+    - critic.model.fsdp_config.param_offload=False
+    - critic.model.fsdp_config.optimizer_offload=False
+    - algorithm.kl_ctrl.kl_coef=0.00
+    - algorithm.adv_estimator=grpo
+    - trainer.logger=[console]
+    - trainer.project_name=TTRL-verl
+    - trainer.experiment_name=0611-TTRL-Len@3k-mme_20_smoke-_dataset-host_ttrv-datasets_models_OpenGVLab_InternVL3-2B-grpo
+    - trainer.n_gpus_per_node=2
+    - trainer.nnodes=1
+    - trainer.save_freq=20000000
+    - trainer.test_freq=200000
+    - trainer.max_actor_ckpt_to_keep=0
+    - trainer.max_critic_ckpt_to_keep=0
+    - trainer.default_local_dir=checkpoints/TTRL-verl/mme_20_smoke-_dataset-host_ttrv-datasets_models_OpenGVLab_InternVL3-2B/0611/TTRL-Len@3k-grpo-144821
+    - trainer.total_epochs=2
+    - trainer.test_freq=200000
+    - trainer.save_freq=0
+    - trainer.max_actor_ckpt_to_keep=0
+    - trainer.max_critic_ckpt_to_keep=0
+    - trainer.default_local_dir=/path/to/datasets/checkpoints/TTRL-verl/mme20_p0_validfreq_smoke4_20260611_p0_validfreq_smoke4_mme
+    - trainer.resume_mode=disable
+    - actor_rollout_ref.rollout.enable_chunked_prefill=False
+    - +actor_rollout_ref.rollout.limit_images=1
+    - trainer.total_training_steps=1
+    - trainer.val_before_train=false
+    - trainer.experiment_name=mme20_p0_validfreq_smoke4_ttrv_frequency_valid_only_20260611_p0_validfreq_smoke4_mme
+    - trainer.default_local_dir=/path/to/datasets/checkpoints/TTRL-verl/mme20_p0_validfreq_smoke4_20260611_p0_validfreq_smoke4_mme/mme20_p0_validfreq_smoke4_ttrv_frequency_valid_only
+    - trainer.test_freq=1
+  job:
+    name: main_ppo
+    chdir: null
+    override_dirname: +actor_rollout_ref.rollout.limit_images=1,+reward_model.reward_kwargs.density_temperature_t0=0.2,+reward_model.reward_kwargs.density_temperature_t_max=0.8,+reward_model.reward_kwargs.density_temperature_t_min=0.05,actor_rollout_ref.actor.fsdp_config.optimizer_offload=False,actor_rollout_ref.actor.fsdp_config.param_offload=False,actor_rollout_ref.actor.optim.lr=5e-7,actor_rollout_ref.actor.optim.lr_warmup_steps_ratio=0.03,actor_rollout_ref.actor.optim.warmup_style=cosine,actor_rollout_ref.actor.ppo_max_token_len_per_gpu=8548,actor_rollout_ref.actor.ppo_micro_batch_size_per_gpu=2,actor_rollout_ref.actor.ppo_mini_batch_size=1,actor_rollout_ref.actor.use_kl_loss=True,actor_rollout_ref.model.enable_gradient_checkpointing=True,actor_rollout_ref.model.path=/path/to/datasets/models/OpenGVLab/InternVL3-2B,actor_rollout_ref.model.use_remove_padding=True,actor_rollout_ref.ref.fsdp_config.param_offload=True,actor_rollout_ref.ref.log_prob_micro_batch_size_per_gpu=2,actor_rollout_ref.rollout.do_vote=True,actor_rollout_ref.rollout.enable_chunked_prefill=False,actor_rollout_ref.rollout.enforce_eager=False,actor_rollout_ref.rollout.free_cache_engine=False,actor_rollout_ref.rollout.gpu_memory_utilization=0.65,actor_rollout_ref.rollout.log_prob_micro_batch_size_per_gpu=2,actor_rollout_ref.rollout.max_model_len=8548,actor_rollout_ref.rollout.max_num_batched_tokens=8548,actor_rollout_ref.rollout.n=16,actor_rollout_ref.rollout.n_vote=32,actor_rollout_ref.rollout.name=vllm,actor_rollout_ref.rollout.temperature=1.0,actor_rollout_ref.rollout.tensor_model_parallel_size=1,actor_rollout_ref.rollout.val_kwargs.do_sample=False,actor_rollout_ref.rollout.val_kwargs.n=1,actor_rollout_ref.rollout.val_kwargs.temperature=0.0,actor_rollout_ref.rollout.val_kwargs.top_p=0.95,algorithm.adv_estimator=grpo,algorithm.kl_ctrl.kl_coef=0.00,critic.model.enable_gradient_checkpointing=True,critic.model.fsdp_config.optimizer_offload=False,critic.model.fsdp_config.param_offload=False,critic.model.path=/path/to/datasets/models/OpenGVLab/InternVL3-2B,critic.model.use_remove_padding=True,critic.optim.lr=9e-6,critic.ppo_micro_batch_size_per_gpu=2,data.filter_overlong_prompts=True,data.max_prompt_length=7524,data.max_response_length=1024,data.train_batch_size=2,data.train_files=[/path/to/datasets/verl_data/mme_20_smoke/train.parquet],data.truncation=error,data.val_files=[/path/to/datasets/verl_data/mme_20_smoke/test.parquet],reward_model.reward_kwargs.all_unknown_reward=0.0,reward_model.reward_kwargs.answer_choice_labels=AB,reward_model.reward_kwargs.answer_parse_mode=legacy,reward_model.reward_kwargs.entropy_coef=0.0,reward_model.reward_kwargs.entropy_temperature_gamma=1.0,reward_model.reward_kwargs.entropy_temperature_lambda=0.5,reward_model.reward_kwargs.entropy_temperature_tau0=0.25,reward_model.reward_kwargs.entropy_temperature_tau_min=0.05,reward_model.reward_kwargs.entropy_temperature_version=v3,reward_model.reward_kwargs.feature_center_hsr_alpha=0.5,reward_model.reward_kwargs.feature_center_hsr_beta=0.2,reward_model.reward_kwargs.harmony_transform_type=photometric_weak,reward_model.reward_kwargs.mode=train,reward_model.reward_kwargs.n_samples_per_prompt=16,reward_model.reward_kwargs.n_votes_per_prompt=32,reward_model.reward_kwargs.reward_style=frequency_valid_only,reward_model.reward_kwargs.soft_label_gamma=2.0,reward_model.reward_kwargs.unknown_reward=0.0,reward_model.reward_manager=ttrl,trainer.default_local_dir=/path/to/datasets/checkpoints/TTRL-verl/mme20_p0_validfreq_smoke4_20260611_p0_validfreq_smoke4_mme,trainer.default_local_dir=/path/to/datasets/checkpoints/TTRL-verl/mme20_p0_validfreq_smoke4_20260611_p0_validfreq_smoke4_mme/mme20_p0_validfreq_smoke4_ttrv_frequency_valid_only,trainer.default_local_dir=checkpoints/TTRL-verl/mme_20_smoke-_dataset-host_ttrv-datasets_models_OpenGVLab_InternVL3-2B/0611/TTRL-Len@3k-grpo-144821,trainer.experiment_name=0611-TTRL-Len@3k-mme_20_smoke-_dataset-host_ttrv-datasets_models_OpenGVLab_InternVL3-2B-grpo,trainer.experiment_name=mme20_p0_validfreq_smoke4_ttrv_frequency_valid_only_20260611_p0_validfreq_smoke4_mme,trainer.logger=[console],trainer.max_actor_ckpt_to_keep=0,trainer.max_actor_ckpt_to_keep=0,trainer.max_critic_ckpt_to_keep=0,trainer.max_critic_ckpt_to_keep=0,trainer.n_gpus_per_node=2,trainer.nnodes=1,trainer.project_name=TTRL-verl,trainer.resume_mode=disable,trainer.save_freq=0,trainer.save_freq=20000000,trainer.test_freq=1,trainer.test_freq=200000,trainer.test_freq=200000,trainer.total_epochs=2,trainer.total_training_steps=1,trainer.val_before_train=false
+    id: ???
+    num: ???
+    config_name: ppo_trainer
+    env_set: {}
+    env_copy: []
+    config:
+      override_dirname:
+        kv_sep: '='
+        item_sep: ','
+        exclude_keys: []
+  runtime:
+    version: 1.3.2
+    version_base: '1.3'
+    cwd: /path/to/project/TTRV/verl
+    config_sources:
+    - path: hydra.conf
+      schema: pkg
+      provider: hydra
+    - path: /path/to/project/TTRV/verl/verl/trainer/config
+      schema: file
+      provider: main
+    - path: ''
+      schema: structured
+      provider: schema
+    output_dir: /path/to/project/TTRV/verl/outputs/2026-06-11/14-48-28
+    choices:
+      hydra/env: default
+      hydra/callbacks: null
+      hydra/job_logging: default
+      hydra/hydra_logging: default
+      hydra/hydra_help: default
+      hydra/help: default
+      hydra/sweeper: basic
+      hydra/launcher: basic
+      hydra/output: default
+  verbose: false
